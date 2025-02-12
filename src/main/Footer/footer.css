@@ -1,0 +1,32 @@
+.box .imageLogoContainer {
+    border-radius: 50%;
+    height: 200px;
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Corrected animation duration */
+}
+.box .imageLogoContainer .logoCompany {
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
+    background-color: white;
+    /* animation: pulsePadding 2s infinite ease-in-out; */
+}
+/* Keyframes for padding increment and decrement */
+@keyframes pulsePadding {
+    0% {
+        padding: 10px;
+        /* Starting padding */
+    }
+    50% {
+        padding: 20px;
+        /* Maximum padding */
+    }
+    100% {
+        padding: 10px;
+        /* Return to original padding */
+    }
+}
