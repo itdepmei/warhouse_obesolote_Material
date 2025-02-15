@@ -78,29 +78,70 @@ export default function ApproveBooked() {
   };
   return (
     <Box
-      className="container"
-      sx={{ display: "flex", justifyContent: "center", width: "100%" }}
+      sx={{
+        maxWidth: "800px",
+        margin: "0 auto",
+        padding: 3,
+      }}
     >
-      {isLoading&&<Loader/>}
-      <Box sx={{ padding: "16px", width: "100%" }}>
+      {isLoading && <Loader />}
+      <Box>
         {dataBooked?.length > 0 ? (
           dataBooked?.map((item) => (
             <React.Fragment key={item?.book_id}>
-              <Paper sx={{ p: 1, marginBottom: "10px" }}>
-                <Typography>{getTimeAgo(item?.created_book_at)}</Typography>
+              <Paper 
+                elevation={3}
+                sx={{ 
+                  padding: 3,
+                  marginBottom: 2,
+                  borderRadius: 2,
+                  transition: "all 0.2s ease-in-out",
+                  "&:hover": {
+                    transform: "translateY(-2px)",
+                    boxShadow: 6
+                  }
+                }}
+              >
+                <Typography 
+                  variant="caption" 
+                  sx={{ 
+                    display: "block",
+                    marginBottom: 1,
+                    color: "text.secondary"
+                  }}
+                >
+                  {getTimeAgo(item?.created_book_at)}
+                </Typography>
 
-                <Typography dir="rtl">
+                <Typography 
+                  dir="rtl"
+                  sx={{ 
+                    marginBottom: 2,
+                    fontWeight: 500
+                  }}
+                >
                   {`${item?.user_name} من ${item?.Entities_name} طلب حجز ${item?.quantity} عناصر من مادة ${item?.name_material}`}
                 </Typography>
-                <div className="d-flex justify-content-between align-items-center">
-                  <div>
-                    <IconButton onClick={() => handleDeleteItem(item?.book_id)}>
+
+                <Box sx={{ 
+                  display: "flex", 
+                  justifyContent: "space-between", 
+                  alignItems: "center"
+                }}>
+                  <Box sx={{ display: "flex", gap: 1 }}>
+                    <IconButton 
+                      onClick={() => handleDeleteItem(item?.book_id)}
+                      color="error"
+                    >
                       <Delete />
                     </IconButton>
-                    <IconButton onClick={() => handleOpenChat(item?.book_id)}>
+                    <IconButton 
+                      onClick={() => handleOpenChat(item?.book_id)}
+                      color="primary"
+                    >
                       <ChatOutlined />
                     </IconButton>
-                  </div>
+                  </Box>
                   <ApproveComponent
                     book_id={item?.book_id}
                     material_id={item?.material_id}
@@ -108,31 +149,48 @@ export default function ApproveBooked() {
                     setRefresh={setRefresh}
                     edit={false}
                   />
-                </div>
+                </Box>
               </Paper>
-              {openChat === item?.book_id &&
-                message.map((msg) => (
-                  <Paper
-                    key={msg?.message_id}
-                    sx={{ p: 1, marginBottom: "10px" }}
-                  >
-                    <div className="d-flex justify-content-between align-items-center">
-                      <Typography>{msg?.message}</Typography>
-                      <MoreOption
-                        msgId={msg?.id}
-                        messageDe={msg?.message}
-                        setRefresh={setRefresh}
-                        setOpenChat={setOpenChat}
-                      />
-                    </div>
-                  </Paper>
-                ))}
+
+              {openChat === item?.book_id && (
+                <Box sx={{ paddingLeft: 2 }}>
+                  {message.map((msg) => (
+                    <Paper
+                      key={msg?.message_id}
+                      variant="outlined"
+                      sx={{ 
+                        padding: 2,
+                        marginBottom: 1.5,
+                        backgroundColor: "#f5f5f5",
+                        borderRadius: 2
+                      }}
+                    >
+                      <Box sx={{ 
+                        display: "flex", 
+                        justifyContent: "space-between", 
+                        alignItems: "center"
+                      }}>
+                        <Typography>
+                          {msg?.message}
+                        </Typography>
+                        <MoreOption
+                          msgId={msg?.id}
+                          messageDe={msg?.message}
+                          setRefresh={setRefresh}
+                          setOpenChat={setOpenChat}
+                        />
+                      </Box>
+                    </Paper>
+                  ))}
+                </Box>
+              )}
             </React.Fragment>
           ))
         ) : (
-           <CustomNoRowsOverlay />
+          <Box sx={{ marginTop: 4 }}>
+            <CustomNoRowsOverlay />
+          </Box>
         )}
-     
       </Box>
     </Box>
   );

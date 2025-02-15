@@ -1,14 +1,14 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BackendUrl } from "../api/axios";
-const getRoleAndUserId = createAsyncThunk(
-  "auth/getPermissionByUIserId",
+const getApplicationPermissionById = createAsyncThunk(
+  "auth/getApplicationPermissionById",
   async (token, { rejectWithValue }) => {
     try {
       console.log(token);
       const response = await axios({
         method: "get",
-        url: `${BackendUrl}/api/getDataRoleIdAndPermission`,
+        url: `${BackendUrl}/api/getApplicationPermissionById`,
         headers: {
           Accept: "application/json",
           authorization: `${token}`,
@@ -27,4 +27,5 @@ const getRoleAndUserId = createAsyncThunk(
     }
   }
 );
-export { getRoleAndUserId };
+
+export { getApplicationPermissionById };

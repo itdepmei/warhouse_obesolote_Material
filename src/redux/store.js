@@ -12,6 +12,7 @@ import warehouseSlice from "./wharHosueState/WareHouseSlice";
 import factorySlice from "./FactoriesState/FactoriesSlice";
 import LabSlice from "./LaboriesState/LabSlice";
 import dataHandelUserActionSlice from "./getDataProjectById/getSlice";
+import  applicationPermissionsSlice  from "./auth/authSlice";
 
 // @ts-ignore
 const enhance = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
@@ -31,6 +32,7 @@ const store = configureStore(
       factory: factorySlice,
       lab: LabSlice,
       dataHandelUserAction: dataHandelUserActionSlice,
+      applicationPermissions: applicationPermissionsSlice,
     },
   },
   // @ts-ignore

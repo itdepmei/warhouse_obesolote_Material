@@ -48,7 +48,7 @@ export default function ShowDataUnitAndRole({ themeMode, label, token }) {
   }, [open, fetchData]);
 
   const handleSetPermission = (id) =>
-    navigate(`/SetPermissionToGroup/${id}`);
+    navigate(`SetPermissionToGroup/${id}`);
   const renderRows = () => {
     if (label === "Role") {
       return dataGroup.map((item, index) => (

@@ -8,6 +8,7 @@ import {
 } from "./authActions";
 import {
   removeToken,
+  setPermissions,
   setToken,
 } from "../../utils/handelCookie";
 
@@ -70,7 +71,7 @@ export const userSlice = createSlice({
       })
       .addCase(
         loginUser.fulfilled,
-        (state, { payload: { user, message, accessToken, refreshToken } }) => {
+        (state, { payload: { user, message, accessToken, refreshToken,applicationpermissionResponse } }) => {
           state.isError = false;
           state.isSuccess = true;
           state.message = message;
@@ -79,6 +80,7 @@ export const userSlice = createSlice({
           state.accessToken = accessToken; // Store access token
           state.refreshToken = refreshToken; // Store refresh token
           setToken(accessToken, refreshToken); // Save tokens in cookies
+          setPermissions(applicationpermissionResponse);
         }
       )
       .addCase(loginUser.rejected, (state, action) => {

@@ -2,7 +2,6 @@ import { Architecture, Archive, HdRounded, Home, Info, InfoOutlined, PersonAddAl
 import {
   IconButton,
   Menu,
-  MenuItem,
   Box,
   Grid,
   Paper,
@@ -12,31 +11,34 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BiSolidCategory } from "react-icons/bi";
 import AppsIcon from "@mui/icons-material/Apps";
+
 function OtherApplication({ navigate }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const { t } = useTranslation();
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
 
   const menuItems = [
-    { label: t("نظام المخازن"), path: "warehouse-management", iconName: <Warehouse /> },
+    { label: t("نظام المخازن"), path: "LoginWh", iconName: <Warehouse /> },
     {
       label: t("نظام المواد الراكدة وبطيئة الحركة"),
-      path: "stagnant-materials",
+      path: "login",
       iconName: <BiSolidCategory style={{ fontSize: "24px" }} />,
     },
-    { label: t("نظام الارشفة"), path: "archive-management", iconName: <Archive /> },
-    {
-      label: t(" نظام اموارد البشرية"),
-      path: "human-resources",
-      iconName: <PersonAddAlt1 style={{ fontSize: "24px" }} />,
-    },
-    { label: t("نظام الرواتب"), path: "salary-management", iconName: <Archive /> },
+    // { label: t("نظام الارشفة"), path: "LoginWh", iconName: <Archive /> },
+    // {
+    //   label: t(" نظام اموارد البشرية"),
+    //   path: "login",
+    //   iconName: <PersonAddAlt1 style={{ fontSize: "24px" }} />,
+    // },
+    // { label: t("نظام الرواتب"), path: "LoginWh", iconName: <Archive /> },
   
   ];
 
@@ -99,7 +101,6 @@ function OtherApplication({ navigate }) {
                       },
                     }}
                     onClick={() => {
-                      // window.location.href = page.path;
                       navigate(page.path);
                       handleClose();
                     }}

@@ -141,7 +141,6 @@ export const logoutUser = createAsyncThunk(
       });
       if (response || response.data) {
         removeToken();
-        window.location.reload();
         localStorage.clear();
         return response?.data; // If successful, return the API response
       }
