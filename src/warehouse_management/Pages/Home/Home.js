@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import logo from "../../../assets/image/1671635909.png";
 
 const WelcomeSection = styled(Box)(({ theme }) => ({
-  minHeight: "100vh",
+  minHeight: "100vh ",
   display: "flex",
   alignItems: "center",
   background: "linear-gradient(135deg, #004d40 0%, #00796b 100%)",
@@ -41,7 +41,6 @@ const FeatureBox = styled(Box)(({ theme }) => ({
     backgroundColor: "rgba(255, 255, 255, 0.15)",
   },
 }));
-
 const FeatureIcon = styled(Box)(({ theme }) => ({
   backgroundColor: "rgba(255, 255, 255, 0.2)",
   color: "white",
@@ -52,14 +51,12 @@ const FeatureIcon = styled(Box)(({ theme }) => ({
   alignItems: "center",
   justifyContent: "center",
 }));
-
 export default function HomeWharhouse() {
   const { t } = useTranslation();
-
   return (
-    <Box sx={{ height: "100vh" }} dir="rtl">
+    <div style={{ height: "100vh " }} dir="rtl" className="mt-0 pt-0">
       <WelcomeSection>
-        <Container maxWidth="lg">
+        <Container className="mt-0 pt-0">
           <Box
             sx={{
               display: "flex",
@@ -157,6 +154,6 @@ export default function HomeWharhouse() {
           </Box>
         </Container>
       </WelcomeSection>
-    </Box>
+    </div>
   );
 }

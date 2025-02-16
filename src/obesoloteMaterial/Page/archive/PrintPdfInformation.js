@@ -8,6 +8,7 @@ import { formatDateYearsMonth } from "../../../utils/Function";
 import PopupForm from "../../../components/PopupForm";
 import { BackendUrFile } from "../../../redux/api/axios";
 import Logo from "../../../components/Layout/logo";
+import './PrintPdfInformation.css';
 
 export default function PrintPdInformation({ dataMaterial }) {
   const { t } = useTranslation();
@@ -50,56 +51,42 @@ export default function PrintPdInformation({ dataMaterial }) {
       dir="rtl"
     >
       <div className="mt-4">
-        <div
-          ref={componentRef}
-          className="p-4"
-          style={{
-            width: "210mm",
-            minHeight: "297mm",
-            padding: "20mm",
-            margin: "auto",
-            backgroundColor: "white",
-          }}
-        >
-          <div className="d-flex justify-content-center mb-4 "dir="ltr">
-            <Logo />
+        <div ref={componentRef} className="print-content print-document">
+          <div className="official-header">
+            <img src={Logo} alt="Organization Logo" className="header-logo" />
+            <h1 className="document-title">معلومات المادة الراكدة</h1>
+            <div className="reference-number">Ref: {new Date().getFullYear()}-{String(Math.floor(Math.random() * 10000)).padStart(4, '0')}</div>
           </div>
-          <Divider />
-          <Box component="ul" sx={{ listStyle: "none", padding: 0 }}>
+          <div className="watermark">وثيقة رسمية</div>
+
+          <ul className="material-details">
             {materialDetails.map((detail, index) => (
-              <Box
-                component="li"
-                key={index}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  padding: "8px 0",
-                  borderBottom: "1px solid #ddd",
-                }}
-              >
-                <Typography variant="body1" component="span">
-                  {detail.label}:
-                </Typography>
-                <Typography variant="body1" component="span">
-                  {detail.value || "-"}
-                </Typography>
-              </Box>
+              <li key={index}>
+                <span className="detail-label">{detail.label}:</span> 
+                <span className="detail-value">{detail.value || "-"}</span>
+              </li>
             ))}
-            {dataMaterial?.images?.map((item, index) => (
-              <div key={index} style={{ padding: "8px 0" }}>
-                <img
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    maxWidth: "200mm",
-                    marginTop: "10mm",
-                  }}
-                  src={`${BackendUrFile}/${item?.file_name}`}
-                  alt="Material"
-                />
-              </div>
-            ))}
-          </Box>
+          </ul>
+
+          <div className="images-section">
+            <h3>صور المادة</h3>
+            <div className="image-grid">
+              {dataMaterial?.images?.map((image, index) => (
+                <div key={index} className="image-container">
+                  <img src={`${BackendUrFile}/${image?.file_name}`} alt={`Material view ${index + 1}`} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="document-footer">
+            <p>الموافقة:</p>
+            <div className="signature-line"></div>
+            <p>التاريخ: {new Date().toLocaleDateString('ar-IQ')}</p>
+            <div className="official-stamp">
+              ختم رسمي
+            </div>
+          </div>
         </div>
       </div>
     </Box>

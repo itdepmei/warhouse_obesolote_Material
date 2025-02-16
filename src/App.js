@@ -211,21 +211,10 @@ export default function App() {
                   element={<RefreshButtonTemplate />}
                 />
               </Route>
-             
+              <Route path="all-category" element={<AllCategory />} />
+              <Route path="help-platform" element={<HelpAboutProject />} />
             </Route>
-            <Route path="/help-platform" element={<HelpAboutProject />} />
-              <Route path="/All-Category" element={<AllCategory />} />
-              <Route
-                path="/Product-Obsolete/:id"
-                element={<ProductStagnant />}
-              />
-              <Route
-                path="/Product-Overview/:id"
-                element={<ProductOverview />}
-              />
-              <Route path="/about-page" element={<AboutPage />} />
           </Route>
-
           {/* Warehouse Management System Routes (Application ID: 1) */}
           <Route
             element={
@@ -302,6 +291,12 @@ export default function App() {
               </Route>
             </Route>
           </Route>
+          {/*  public routes */}
+          <Route path="/help-platform" element={<HelpAboutProject />} />
+          <Route path="/all-category" element={<AllCategory />} />
+          <Route path="/Product-Obsolete/:id" element={<ProductStagnant />} />
+          <Route path="/Product-Overview/:id" element={<ProductOverview />} />
+          <Route path="/about-page" element={<AboutPage />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Suspense>

@@ -1,0 +1,159 @@
+/* Print-specific styles */
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  body {
+    visibility: hidden;
+  }
+
+  .print-content {
+    visibility: visible;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  /* Ensure page breaks don't occur within elements */
+  .material-details li {
+    page-break-inside: avoid;
+  }
+
+  /* Force background colors and images to print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
+/* General styles */
+.print-document {
+  font-family: "Times New Roman", Times, serif;
+}
+
+.header-logo {
+  max-width: 120px;
+  height: auto;
+}
+
+.document-title {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin: 20px 0;
+  text-decoration: underline;
+}
+
+.material-details {
+  margin: 20px 0;
+}
+
+.material-details li {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.material-details li:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-weight: bold;
+  color: #333;
+}
+
+.detail-value {
+  color: #666;
+}
+
+.images-section {
+  margin-top: 30px;
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.image-container {
+  border: 1px solid #ddd;
+  padding: 10px;
+  background: #fff;
+}
+
+.image-container img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.document-footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #000;
+}
+
+.signature-line {
+  display: inline-block;
+  min-width: 200px;
+  border-bottom: 1px solid #000;
+  margin-top: 10px;
+}
+
+/* Official document styling */
+.official-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.official-stamp {
+  width: 100px;
+  height: 100px;
+  border: 2px solid #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto;
+  font-weight: bold;
+}
+
+.reference-number {
+  font-family: monospace;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* RTL support */
+[dir="rtl"] .material-details {
+  text-align: right;
+}
+
+[dir="rtl"] .detail-label {
+  margin-left: 10px;
+}
+
+/* Watermark for official documents */
+.watermark {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  font-size: 60px;
+  opacity: 0.1;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .image-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+}

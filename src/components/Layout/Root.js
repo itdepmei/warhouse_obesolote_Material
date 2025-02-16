@@ -11,7 +11,6 @@ import "react-toastify/dist/ReactToastify.css";
 import SideBar from "../Layout/SlidBar";
 import { getDesignTokens } from "../Layout/Thime";
 import { getToken } from "utils/handelCookie";
-import CookieStatus from "middleware/cookies";
 import axios from "axios";
 import { BackendUrl } from "../../redux/api/axios";
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -66,7 +65,6 @@ export default function Root({ Route1, Route2, logo }) {
   }, [dispatch, token]);
   return (
     <ThemeProvider theme={theme}>
-      <CookieStatus />
       <Box sx={{ display: "flex", flexDirection: rtl?.flexDirection }}>
         <CssBaseline />
         <ResponsiveAppBar

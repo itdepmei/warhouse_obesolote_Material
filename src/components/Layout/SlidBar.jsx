@@ -118,7 +118,6 @@ const SideBar = ({ open, handleDrawerClose, Route1, Route2, logo }) => {
           )}
         </IconButton>
       </DrawerHeader>
-
       <Box
         sx={{
           display: "flex",

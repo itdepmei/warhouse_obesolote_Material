@@ -229,181 +229,244 @@ const ProductOverview = () => {
     </li>
   );
   return (
-    <Box>
+    <Box sx={{ minHeight: '100vh', py: 4, backgroundColor: theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.02)' }}>
       {loading && <Loader />}
-      <div className="container py-5">
-        <div className="row d-flex justify-content-center my-4">
+      <div className="container">
+        <div className="row d-flex justify-content-center">
           <div className="col-md-8">
             <div
               className="card-profile mb-4"
               style={{
-                background:
-                  theme?.palette?.mode === "dark"
-                    ? maintheme?.lightblack
-                    : maintheme?.paperColor,
+                background: theme?.palette?.mode === "dark" ? maintheme?.lightblack : maintheme?.paperColor,
+                borderRadius: '16px',
+                overflow: 'hidden',
+                boxShadow: theme.palette.mode === 'dark' 
+                  ? '0 8px 24px rgba(0,0,0,0.4)'
+                  : '0 8px 24px rgba(0,0,0,0.1)',
               }}
             >
               <div
-                className="card-header d-flex justify-content-between"
-                style={{ background: maintheme?.iconColor }}
+                className="card-header d-flex justify-content-between align-items-center"
+                style={{ 
+                  background: maintheme?.iconColor,
+                  padding: '1rem 1.5rem',
+                }}
               >
                 <Button
                   onClick={() => window.history.back(-1)}
-                  sx={{ color: "white" }}
+                  sx={{ 
+                    color: "white",
+                    '&:hover': {
+                      transform: 'translateX(-4px)',
+                      transition: 'all 0.3s ease',
+                    }
+                  }}
                 >
                   <ArrowCircleLeftOutlined className="me-2" />
                   الرجوع الى الخلف
                 </Button>
               </div>
-              <div className="card-body ">
-                <div className="main-image ">
+              <div className="card-body p-4">
+                <div 
+                  className="main-image mb-4"
+                  style={{
+                    borderRadius: '12px',
+                    overflow: 'hidden',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                  }}
+                >
                   <img
                     className="center"
                     src={isImageFile(dataProduct?.images)}
                     alt={dataProduct?.name_material || "Product Image"}
+                    style={{
+                      width: '100%',
+                      height: 'auto',
+                      objectFit: 'cover',
+                      transition: 'transform 0.3s ease',
+                      '&:hover': {
+                        transform: 'scale(1.02)',
+                      }
+                    }}
                   />
                 </div>
-                <div className="d-flex justify-content-center align-items-center gap-3 flex-wrap">
+                <div className="d-flex justify-content-center align-items-center gap-4 flex-wrap">
                   {dataProduct?.images?.map((item, index) => (
-                    <>
-                      <div key={index}>
-                        {getFileIcon(item?.file_name, "_", "edit")}
-                      </div>
-                    </>
+                    <div 
+                      key={index}
+                      style={{
+                        transition: 'transform 0.3s ease',
+                        '&:hover': {
+                          transform: 'scale(1.1)',
+                        }
+                      }}
+                    >
+                      {getFileIcon(item?.file_name, "_", "edit")}
+                    </div>
                   ))}
                 </div>
               </div>
             </div>
           </div>
           <div className="col-md-4">
-            {/* {dataProduct?.Quantity === 0 ? ( */}
-            <>
+            <div
+              className="card-profile mb-4"
+              style={{
+                background: theme?.palette?.mode === "dark" ? maintheme?.lightblack : maintheme?.paperColor,
+                borderRadius: '16px',
+                overflow: 'hidden',
+                boxShadow: theme.palette.mode === 'dark' 
+                  ? '0 8px 24px rgba(0,0,0,0.4)'
+                  : '0 8px 24px rgba(0,0,0,0.1)',
+              }}
+            >
               <div
-                className="card-profile mb-4"
-                style={{
-                  background:
-                    theme?.palette?.mode === "dark"
-                      ? maintheme?.lightblack
-                      : maintheme?.paperColor,
+                className="card-header py-3"
+                dir="rtl"
+                style={{ 
+                  background: maintheme?.iconColor,
+                  borderBottom: '1px solid rgba(255,255,255,0.1)',
                 }}
               >
-                <div
-                  className="card-header py-3"
+                <h5 className="mb-0" style={{ color: "white", fontWeight: 600 }}>
+                  {dataProduct?.name_material} معلومات
+                </h5>
+              </div>
+              <div className="card-body p-0">
+                <ul 
+                  className="list-group list-group-flush" 
                   dir="rtl"
-                  style={{ background: maintheme?.iconColor }}
-                >
-                  <h5 className="mb-0" style={{ color: "white" }}>
-                    {dataProduct?.name_material} معلومات
-                  </h5>
-                </div>
-                <div className="card-body">
-                  <ul className="list-group list-group-flush" dir="rtl">
-                    {renderListItem(
-                      t("MaterialOverview.Material Name"),
-                      dataProduct?.name_material
-                    )}
-                    {renderListItem(
-                      t("MaterialOverview.main Class"),
-                      dataProduct?.main_Class_name
-                    )}
-                    {renderListItem(
-                      t("MaterialOverview.sub Class"),
-                      dataProduct?.sub_class_name
-                    )}
-                    {token && (
-                      <>
-                        {renderListItem(
-                          t("MaterialOverview.State of matter"),
-                          dataProduct?.state_name
-                        )}
-                        {renderListItem(
-                          t("MaterialOverview.typeMaterial"),
-                          dataProduct?.typ_material
-                        )}
-                        {renderListItem(
-                          t("MaterialOverview.purchase date"),
-
-                          formatDateYearsMonth(dataProduct?.puchase_date)
-                        )}
-                        {renderListItem(
-                          t("MaterialOverview.ministry name"),
-                          dataProduct?.ministries
-                        )}
-                        {renderListItem(
-                          t("MaterialOverview.entity name"),
-                          dataProduct?.Entities_name
-                        )}
-                        {renderListItem(
-                          t("MaterialOverview.Quantity"),
-                          dataProduct?.Quantity === 0
-                            ? "تم الحجز"
-                            : dataProduct?.Quantity
-                        )}
-                        {renderListItem(
-                          t("MaterialOverview.phone Number"),
-                          dataProduct?.phone_number,
-                          "build"
-                        )}
-                        {renderListItem(
-                          t("MaterialOverview.Address"),
-                          dataProduct?.address,
-                          "bold"
-                        )}
-                      </>
-                    )}
-                  </ul>
-                </div>
-                <Box
-                  className="productDescription"
-                  dir="rtl"
-                  sx={{
-                    background:
-                      theme?.palette?.mode === "dark"
-                        ? maintheme?.lightblack
-                        : maintheme?.paperColor,
-                    color:
-                      theme?.palette?.mode === "dark"
-                        ? maintheme?.paperColor
-                        : "#000000",
+                  style={{
+                    '& li': {
+                      transition: 'background-color 0.3s ease',
+                      '&:hover': {
+                        backgroundColor: theme.palette.mode === 'dark' 
+                          ? 'rgba(255,255,255,0.05)'
+                          : 'rgba(0,0,0,0.02)',
+                      }
+                    }
                   }}
                 >
+                  {renderListItem(
+                    t("MaterialOverview.Material Name"),
+                    dataProduct?.name_material
+                  )}
+                  {renderListItem(
+                    t("MaterialOverview.main Class"),
+                    dataProduct?.main_Class_name
+                  )}
+                  {renderListItem(
+                    t("MaterialOverview.sub Class"),
+                    dataProduct?.sub_class_name
+                  )}
                   {token && (
                     <>
-                      <h4>{t("MaterialOverview.Description")}</h4>
-                      <p
-                        style={{
-                          color:
-                            theme?.palette?.mode === "dark"
-                              ? maintheme?.paperColor
-                              : "#000000",
-                        }}
-                      >
-                        {dataProduct?.description || "لايوجد"}
-                      </p>
+                      {renderListItem(
+                        t("MaterialOverview.State of matter"),
+                        dataProduct?.state_name
+                      )}
+                      {renderListItem(
+                        t("MaterialOverview.typeMaterial"),
+                        dataProduct?.typ_material
+                      )}
+                      {renderListItem(
+                        t("MaterialOverview.purchase date"),
+
+                        formatDateYearsMonth(dataProduct?.puchase_date)
+                      )}
+                      {renderListItem(
+                        t("MaterialOverview.ministry name"),
+                        dataProduct?.ministries
+                      )}
+                      {renderListItem(
+                        t("MaterialOverview.entity name"),
+                        dataProduct?.Entities_name
+                      )}
+                      {renderListItem(
+                        t("MaterialOverview.Quantity"),
+                        dataProduct?.Quantity === 0
+                          ? "تم الحجز"
+                          : dataProduct?.Quantity
+                      )}
+                      {renderListItem(
+                        t("MaterialOverview.phone Number"),
+                        dataProduct?.phone_number,
+                        "build"
+                      )}
+                      {renderListItem(
+                        t("MaterialOverview.Address"),
+                        dataProduct?.address,
+                        "bold"
+                      )}
                     </>
                   )}
-                  {!token && (
-                    <>
-                      <hr />
-                      <Typography>
-                        أذا كنت تريد أستكشاف المزيد من المعلومات أو حجز المادة
-                        يجب تسجيل الدخول أولا
-                        <Link to={"/login"}>تسجيل الدخول</Link>
-                      </Typography>
-                    </>
-                  )}
-                </Box>
+                </ul>
               </div>
-            </>
+              <Box
+                className="productDescription"
+                dir="rtl"
+                sx={{
+                  p: 3,
+                  background: theme?.palette?.mode === "dark" ? maintheme?.lightblack : maintheme?.paperColor,
+                  color: theme?.palette?.mode === "dark" ? maintheme?.paperColor : "#000000",
+                  borderTop: '1px solid',
+                  borderColor: theme.palette.mode === 'dark' 
+                    ? 'rgba(255,255,255,0.1)'
+                    : 'rgba(0,0,0,0.1)',
+                }}
+              >
+                {token && (
+                  <>
+                    <h4>{t("MaterialOverview.Description")}</h4>
+                    <p
+                      style={{
+                        color:
+                          theme?.palette?.mode === "dark"
+                            ? maintheme?.paperColor
+                            : "#000000",
+                      }}
+                    >
+                      {dataProduct?.description || "لايوجد"}
+                    </p>
+                  </>
+                )}
+                {!token && (
+                  <>
+                    <hr />
+                    <Typography>
+                      أذا كنت تريد أستكشاف المزيد من المعلومات أو حجز المادة
+                      يجب تسجيل الدخول أولا
+                      <Link to={"/login"}>تسجيل الدخول</Link>
+                    </Typography>
+                  </>
+                )}
+              </Box>
+            </div>
             <div className="addtocard">
               {token ? (
                 Object.keys(bookingDataM)?.length > 0 ? (
-                  <>
-                    {/* <BottomSend className="btn btn-primary btn-lg btn-block mb-2">
-                      تم حجز المنتج
-                    </BottomSend> */}
+                  <div 
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '1rem',
+                    }}
+                  >
                     {bookingDataM?.booked==1 && (
-                      <BottomRoot className="btn btn-primary btn-lg btn-block">
+                      <BottomRoot 
+                        className="btn btn-lg btn-block"
+                        style={{
+                          background: theme.palette.success.main,
+                          color: 'white',
+                          borderRadius: '12px',
+                          padding: '1rem',
+                          transition: 'all 0.3s ease',
+                          '&:hover': {
+                            transform: 'translateY(-2px)',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                          }
+                        }}
+                      >
                         تمت الموافقة على الطلب
                       </BottomRoot>
                     )}
@@ -422,7 +485,7 @@ const ProductOverview = () => {
                         </BottomRoot>
                       )
                     )}
-                  </>
+                  </div>
                 ) : (
                   <BookingFormUser
                     obsoleteMaterial={dataProduct?.stagnant_id}
@@ -438,7 +501,17 @@ const ProductOverview = () => {
               {Object.keys(messageDenied || {}).length === 0 &&
               bookingDataM &&
               Object.keys(bookingDataM || {}).length > 0 ? (
-                <div className="card-profile mt-3">
+                <div 
+                  className="card-profile mt-3"
+                  style={{
+                    background: theme.palette.mode === 'dark' 
+                      ? 'rgba(255,255,255,0.05)'
+                      : 'rgba(0,0,0,0.02)',
+                    borderRadius: '12px',
+                    padding: '1.5rem',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                  }}
+                >
                   {!bookingDataM?.booked ? (
                     <Typography>
                       سيتم مراجعة الطلب خلال 24 ساعة من تاريخ تقديم الطلب
@@ -477,7 +550,16 @@ const ProductOverview = () => {
               ) : null}
 
               {Object.keys(messageDenied || {}).length > 0 ? (
-                <div className="card-profile mt-3">
+                <div 
+                  className="card-profile mt-3"
+                  style={{
+                    background: theme.palette.error.light,
+                    color: theme.palette.error.contrastText,
+                    borderRadius: '12px',
+                    padding: '1.5rem',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                  }}
+                >
                   {messageDenied?.message}
                 </div>
               ) : null}

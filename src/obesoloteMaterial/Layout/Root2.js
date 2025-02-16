@@ -1,8 +1,5 @@
-import { ThemeProvider, createTheme} from "@mui/material/styles";
 import { useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import { getDesignTokens } from "../../components/Layout/Thime";
-import CookieStatus from "middleware/cookies";
 import Root from "../../components/Layout/Root";
 import {
   AccountBox,
@@ -145,16 +142,8 @@ export default function Root2() {
       checkPermission: roles?.show_profile?._id,
     },
   ];
-  const [mode, setMode] = React.useState(
-    Boolean(localStorage.getItem("currentMode"))
-      ? localStorage.getItem("currentMode")
-      : "light"
-  );
-  const theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
+
   return (
-    <ThemeProvider theme={theme}>
-      <CookieStatus />
-      <Root Route2={Route2} Route1={Route1} />
-    </ThemeProvider>
+    <Root Route2={Route2} Route1={Route1} />
   );
 }

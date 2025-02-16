@@ -2,7 +2,6 @@ import { Architecture, Archive, HdRounded, Home, Info, InfoOutlined, PersonAddAl
 import {
   IconButton,
   Menu,
-  MenuItem,
   Box,
   Grid,
   Paper,

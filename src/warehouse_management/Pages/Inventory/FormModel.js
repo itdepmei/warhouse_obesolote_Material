@@ -115,18 +115,6 @@ export default function InventoryModel(props) {
       [name]: value,
     }));
   };
-
-  const handleDateChangEdit = (name, value) => {
-    const parsedDate = dayjs(value);
-    if (!parsedDate.isValid()) {
-      return;
-    }
-    setFormData((prev) => ({
-      ...prev,
-      [name]: parsedDate,
-    }));
-  };
-
   useEffect(() => {
     if (props?.addInventory === "addInventory" && props?.storeData) {
       setDataMaterial({
@@ -145,22 +133,7 @@ export default function InventoryModel(props) {
 
   useEffect(() => {
     if (props?.editMode) {
-      handleDateChangEdit(
-        formData.expiry_date,
-        props?.InventoryData.expiry_date
-      );
-      handleDateChangEdit(
-        formData.purchase_date,
-        props?.InventoryData.purchase_date
-      );
-      handleDateChangEdit(
-        formData.document_date,
-        props?.InventoryData.document_date
-      );
-      handleDateChangEdit(
-        formData.production_date,
-        props?.InventoryData.production_date
-      );
+     
       setDataMaterial({
         code: props?.InventoryData.cod_material,
         name: props?.InventoryData.name_of_material,
@@ -185,6 +158,7 @@ export default function InventoryModel(props) {
         expiry_date: dayjs(props?.InventoryData?.expiry_date),
         purchase_date: dayjs(props?.InventoryData?.purchase_date),
         document_date: dayjs(props?.InventoryData?.document_date),
+        production_date: dayjs(props?.InventoryData?.production_date),
       });
     }
   }, [props?.editMode, props?.InventoryData]);
@@ -455,7 +429,7 @@ export default function InventoryModel(props) {
             customPadding="0px"
             paddingHorizontal={"0px"}
             required={true}
-            // value={formData.document_date ? formData.document_date : null}
+            value={formData.document_date ? formData.document_date : null}
             CustomFontSize="12px"
             borderPosition="right"
             is_dateTime={false}
@@ -465,7 +439,7 @@ export default function InventoryModel(props) {
             is_Time={false}
             minDate={null}
             maxDate={null}
-            // borderColor="inherit"
+            borderColor="inherit"
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -478,7 +452,7 @@ export default function InventoryModel(props) {
             customPadding="0px"
             paddingHorizontal={"0px"}
             required={true}
-            // value={formData.production_date ? formData.production_date : null}
+            value={formData.production_date ? formData.production_date : null}
             CustomFontSize="12px"
             borderPosition="right"
             is_dateTime={false}
@@ -488,7 +462,7 @@ export default function InventoryModel(props) {
             is_Time={false}
             minDate={null}
             maxDate={null}
-            // borderColor="inherit"
+            borderColor="inherit"
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -501,7 +475,7 @@ export default function InventoryModel(props) {
             customPadding="0px"
             paddingHorizontal={"0px"}
             required={true}
-            // value={formData.expiry_date ? formData.expiry_date : null}
+            value={formData.expiry_date ? formData.expiry_date : null}
             CustomFontSize="12px"
             borderPosition="right"
             is_dateTime={false}
@@ -511,7 +485,7 @@ export default function InventoryModel(props) {
             is_Time={false}
             minDate={null}
             maxDate={null}
-            // borderColor="inherit"
+            borderColor="inherit"
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -524,7 +498,7 @@ export default function InventoryModel(props) {
             customPadding="0px"
             paddingHorizontal={"0px"}
             required={true}
-            // value={formData.purchase_date ? formData.purchase_date : null}
+            value={formData.purchase_date ? formData.purchase_date : null}
             CustomFontSize="12px"
             borderPosition="right"
             is_dateTime={false}
@@ -534,32 +508,10 @@ export default function InventoryModel(props) {
             is_Time={false}
             minDate={null}
             maxDate={null}
-            // borderColor="inherit"
+            borderColor="inherit"
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <CustomDatePicker
-            haswidth={true}
-            label={"تاريخ المستند"}
-            format="YYYY/MM/DD"
-            placeholder="تاريخ المستند"
-            customWidth="100%"
-            customPadding="0px"
-            paddingHorizontal={"0px"}
-            required={true}
-            // value={formData.document_date ? formData.document_date : null}
-            CustomFontSize="12px"
-            borderPosition="right"
-            is_dateTime={false}
-            error={errors.document_date !== ""}
-            textError={errors.document_date}
-            setValue={(value) => handleDateChange("document_date", value)}
-            is_Time={false}
-            minDate={null}
-            maxDate={null}
-            // borderColor="inherit"
-          />
-        </Grid>
+       
       </Grid>
     </Box>
   );

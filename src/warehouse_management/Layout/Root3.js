@@ -95,9 +95,6 @@ export default function RootWarehouse() {
   );
   const theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
   return (
-    <ThemeProvider theme={theme}>
-      <CookieStatus />
       <Root Route2={Route2} Route1={Route1} logo={logo} />
-    </ThemeProvider>
   );
 }
