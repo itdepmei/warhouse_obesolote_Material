@@ -21,7 +21,6 @@ function OtherApplication({ navigate }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   const menuItems = [
     { label: t("نظام المخازن"), path: "warehouse-management", iconName: <Warehouse /> },
     {
@@ -29,13 +28,13 @@ function OtherApplication({ navigate }) {
       path: "stagnant-materials",
       iconName: <BiSolidCategory style={{ fontSize: "24px" }} />,
     },
-    { label: t("نظام الارشفة"), path: "archive-management", iconName: <Archive /> },
-    {
-      label: t(" نظام اموارد البشرية"),
-      path: "human-resources",
-      iconName: <PersonAddAlt1 style={{ fontSize: "24px" }} />,
-    },
-    { label: t("نظام الرواتب"), path: "salary-management", iconName: <Archive /> },
+    // { label: t("نظام الارشفة"), path: "archive-management", iconName: <Archive /> },
+    // {
+    //   label: t(" نظام اموارد البشرية"),
+    //   path: "human-resources",
+    //   iconName: <PersonAddAlt1 style={{ fontSize: "24px" }} />,
+    // },
+    // { label: t("نظام الرواتب"), path: "salary-management", iconName: <Archive /> },
   
   ];
 

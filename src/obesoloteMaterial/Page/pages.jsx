@@ -1,9 +1,10 @@
 
 import MainHome from "../../main/MainHome";
 function Pages() {
+
   return (
     <div>
-      <MainHome/>
+      <MainHome header={false} />
     </div>
   );
 }

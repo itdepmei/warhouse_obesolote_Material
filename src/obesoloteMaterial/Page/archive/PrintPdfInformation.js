@@ -8,8 +8,7 @@ import { formatDateYearsMonth } from "../../../utils/Function";
 import PopupForm from "../../../components/PopupForm";
 import { BackendUrFile } from "../../../redux/api/axios";
 import Logo from "../../../components/Layout/logo";
-import './PrintPdfInformation.css';
-
+import "./PrintPdfInformation.css";
 export default function PrintPdInformation({ dataMaterial }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -55,14 +54,17 @@ export default function PrintPdInformation({ dataMaterial }) {
           <div className="official-header">
             <img src={Logo} alt="Organization Logo" className="header-logo" />
             <h1 className="document-title">معلومات المادة الراكدة</h1>
-            <div className="reference-number">Ref: {new Date().getFullYear()}-{String(Math.floor(Math.random() * 10000)).padStart(4, '0')}</div>
+            <div className="reference-number">
+              Ref: {new Date().getFullYear()}-
+              {String(Math.floor(Math.random() * 10000)).padStart(4, "0")}
+            </div>
           </div>
           <div className="watermark">وثيقة رسمية</div>
 
           <ul className="material-details">
             {materialDetails.map((detail, index) => (
               <li key={index}>
-                <span className="detail-label">{detail.label}:</span> 
+                <span className="detail-label">{detail.label}:</span>
                 <span className="detail-value">{detail.value || "-"}</span>
               </li>
             ))}
@@ -73,7 +75,10 @@ export default function PrintPdInformation({ dataMaterial }) {
             <div className="image-grid">
               {dataMaterial?.images?.map((image, index) => (
                 <div key={index} className="image-container">
-                  <img src={`${BackendUrFile}/${image?.file_name}`} alt={`Material view ${index + 1}`} />
+                  <img
+                    src={`${BackendUrFile}/${image?.file_name}`}
+                    alt={`Material view ${index + 1}`}
+                  />
                 </div>
               ))}
             </div>
@@ -82,10 +87,8 @@ export default function PrintPdInformation({ dataMaterial }) {
           <div className="document-footer">
             <p>الموافقة:</p>
             <div className="signature-line"></div>
-            <p>التاريخ: {new Date().toLocaleDateString('ar-IQ')}</p>
-            <div className="official-stamp">
-              ختم رسمي
-            </div>
+            <p>التاريخ: {new Date().toLocaleDateString("ar-IQ")}</p>
+            <div className="official-stamp">ختم رسمي</div>
           </div>
         </div>
       </div>

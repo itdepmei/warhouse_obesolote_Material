@@ -382,6 +382,7 @@ const SideBar = ({ open, handleDrawerClose, Route1, Route2, logo }) => {
                 marginLeft: "10px",
                 marginRight: "10px",
                 borderRadius: "5px",
+                
               }}
             >
               <ListItemIcon
@@ -429,45 +430,67 @@ const SideBar = ({ open, handleDrawerClose, Route1, Route2, logo }) => {
                         sx={{
                           minHeight: 48,
                           justifyContent: open ? "initial" : "center",
-                          px: 2.5,
-                          dir: rtl?.dir,
-                          marginLeft: "10px",
-                          marginRight: "10px",
-                          borderRadius: "5px",
-                          bgcolor:
+                          borderRadius: "10px",
+                          px: 2,
+                          backgroundColor:
                             location.pathname === `/${item.path}` ||
                             location.pathname === item.path
                               ? theme.palette.mode === "dark"
-                                ? grey[800] // Active state for dark mode
-                                : grey[300] // Active state for light mode
-                              : null,
+                                ? "rgba(255, 255, 255, 0.08)"
+                                : "rgba(0, 0, 0, 0.04)"
+                              : "transparent",
                           "&:hover": {
-                            bgcolor:
-                              location.pathname === `${item.path}` ||
-                              location.pathname === item.path
-                                ? theme.palette.mode === "dark"
-                                  ? grey[700] // Hover state when active in dark mode
-                                  : grey[400] // Hover state when active in light mode
-                                : theme.palette.action.hover, // Default hover state
-                          },
-                          "&.Mui-selected": {
-                            bgcolor:
+                            backgroundColor:
                               theme.palette.mode === "dark"
-                                ? grey[800] // Active state for dark mode
-                                : grey[300], // Active state for light mode
-                            "&:hover": {
-                              bgcolor:
-                                theme.palette.mode === "dark"
-                                  ? grey[700] // Hover state when active in dark mode
-                                  : grey[400], // Hover state when active in light mode
-                            },
+                                ? "rgba(255, 255, 255, 0.12)"
+                                : "rgba(0, 0, 0, 0.08)",
                           },
+                          transition: "all 0.2s ease",
                         }}
+                        // sx={{
+                        //   minHeight: 48,
+                        //   justifyContent: open ? "initial" : "center",
+                        //   px: 2.5,
+                        //   dir: rtl?.dir,
+                        //   marginLeft: "10px",
+                        //   marginRight: "10px",
+                        //   borderRadius: "5px",
+                        //   bgcolor:
+                        //     location.pathname === `/${item.path}` ||
+                        //     location.pathname === item.path
+                        //       ? theme.palette.mode === "dark"
+                        //         ? grey[800] // Active state for dark mode
+                        //         : grey[300] // Active state for light mode
+                        //       : null,
+                        //   "&:hover": {
+                        //     bgcolor:
+                        //       location.pathname === `${item.path}` ||
+                        //       location.pathname === item.path
+                        //         ? theme.palette.mode === "dark"
+                        //           ? grey[700] // Hover state when active in dark mode
+                        //           : grey[400] // Hover state when active in light mode
+                        //         : theme.palette.action.hover, // Default hover state
+                        //   },
+                        //   "&.Mui-selected": {
+                        //     bgcolor:
+                        //       theme.palette.mode === "dark"
+                        //         ? grey[800] // Active state for dark mode
+                        //         : grey[300], // Active state for light mode
+                        //     "&:hover": {
+                        //       bgcolor:
+                        //         theme.palette.mode === "dark"
+                        //           ? grey[700] // Hover state when active in dark mode
+                        //           : grey[400], // Hover state when active in light mode
+                        //     },
+                        //   },
+                        // }}
                       >
                         <ListItemIcon
                           sx={{
+                            mr: open ? 2 : "auto",
+                            color: theme.palette.primary.main,
+                            transition: "all 0.2s ease",
                             minWidth: 0,
-                            mr: open ? 3 : "auto",
                             justifyContent: "center",
                             fontSize: "20px",
                             color:

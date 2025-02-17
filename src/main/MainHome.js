@@ -8,7 +8,7 @@ import AppbarHeader from "./AppBar";
 import { BackendUrl } from "../redux/api/axios";
 import Category from "./category/CategoryStagnant";
 import Home from "./Home";
-function MainHome() {
+function MainHome(props) {
   const homeRef = useRef(null);
   const reportsRef = useRef(null);
   const categoryRef = useRef(null);
@@ -24,7 +24,11 @@ function MainHome() {
   };
   return (
     <div>
-      <AppbarHeader />
+      {props?.header && (
+        <div>
+          <AppbarHeader />
+        </div>
+      )}
       <div
         ref={homeRef}
         style={{
