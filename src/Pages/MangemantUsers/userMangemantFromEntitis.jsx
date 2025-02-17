@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getDataUserById } from "../../redux/userSlice/authActions";
 import { getToken } from "../../utils/handelCookie";
 import { useTranslation } from "react-i18next";
+import { useApi } from "../../hooks/useApi";
 function UserManagementFromEntities() {
   const { roles } = useSelector((state) => state.RolesData);
   const [page, setPage] = useState(1);
@@ -22,41 +23,46 @@ function UserManagementFromEntities() {
     return state?.user;
   });
   const dispatch = useDispatch();
+  const { loading: apiLoading, error, fetchData } = useApi(); // Using the new API hook
+  useEffect(() => {
+    console.log("Dispatching getDataUserById");
+    dispatch(getDataUserById(token));
+  }, [dispatch, token]);
   const fetchDataByProjectId = useCallback(async () => {
-    setLoading(true);
+    console.log("fetchDataByProjectId called with:", {
+      page,
+      limit,
+      checkPermissionUser: roles?.Add_Data_Users?._id,
+    });
     try {
-      const response = await axios.get(
-        `${BackendUrl}/api/getDataUserManageByIdEntities?page=${page}&limit=${limit}&id=${dataUserById.entity_id}&checkPermissionUser=${roles?.management_user_from_entity?._id}`,
-        {
-          headers: {
-            authorization: getToken(),
-          },
-        }
-      );
-      if (response.data) {
-        setDataUser(response?.data?.response);
-        setTotalPages(response?.data?.pagination?.totalPages);
-        setTotalItems(response?.data?.pagination?.totalItems);
-      }
+      const response = await fetchData({
+        endpoint: "/api/getDataUserManageByIdEntities",
+        method: "GET",
+        params: {
+          page,
+          limit,
+          id: dataUserById.entity_id,
+          checkPermissionUser: roles?.Add_Data_Users?._id,
+        },
+        onSuccess: (data) => {
+          console.log("Data fetched successfully:", data);
+          setDataUser(data?.response);
+          setTotalPages(data?.pagination?.totalPages);
+          setTotalItems(data?.pagination?.totalItems);
+        },
+        onError: (err) => {
+          console.error("Error in fetchDataByProjectId:", err);
+        },
+      });
+      return response;
     } catch (error) {
       console.error("Error fetching project data:", error);
-    } finally {
-      setLoading(false);
     }
-  }, [
-    page,
-    limit,
-    roles?.management_user_from_entity?._id,
-    dataUserById,
-    token,
-  ]); // Added necessary dependencies
-
+  }, [fetchData, page, limit, roles?.Add_Data_Users?._id]);
+  // Added fetchDataByProjectId to dependencies
   useEffect(() => {
     fetchDataByProjectId();
-  }, [fetchDataByProjectId, refreshButton, deleteItem, page, limit]); // Added fetchDataByProjectId to dependencies
-  useEffect(() => {
-    dispatch(getDataUserById(token));
-  }, [dispatch, getToken]);
+  }, [page, limit, roles?.Add_Data_Users?._id]);
   return (
     <div>
       <ManagementUsers

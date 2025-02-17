@@ -1,10 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  Box,
-  IconButton,
-  Paper,
-  Typography,
-} from "@mui/material";
+import React, { useState, useEffect, useCallback } from "react";
+import { Box, IconButton, Paper, Typography } from "@mui/material";
 import { ChatOutlined, Delete } from "@mui/icons-material";
 import { getToken } from "../utils/handelCookie";
 import { BackendUrl } from "../redux/api/axios";
@@ -15,38 +10,56 @@ import MoreOption from "./MoreObtion";
 import { useDispatch, useSelector } from "react-redux";
 import { getDataUserById } from "../redux/userSlice/authActions";
 import Loader from "../components/Loader";
+import { useApi } from "../hooks/useApi";
+
 export default function ApproveBooked() {
+  const { roles } = useSelector((state) => state.RolesData);
   const token = getToken();
   const dispatch = useDispatch();
   const [refresh, setRefresh] = useState(false);
   const [openChat, setOpenChat] = useState(null); // Store the opened chat ID
   const [message, setMessage] = useState([]);
   const [dataBooked, setBooked] = useState([]);
-  const [isLoading,setIsLoading]=useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const { dataUserById } = useSelector((state) => {
     return state?.user;
   });
   useEffect(() => {
     dispatch(getDataUserById(token));
   }, [dispatch]);
-  const fetchDataBooked = async () => {
-    setIsLoading(true)
+  const { loading: apiLoading, error, fetchData } = useApi();
+
+  const fetchDataByProjectId = useCallback(async () => {
     if (!dataUserById?.entity_id) return;
     try {
-      const response = await axios.get(
-        `${BackendUrl}/api/getDataBookedFalse/${dataUserById.entity_id}`,
-        { headers: { authorization: token } }
-      );
-      setBooked(response?.data?.response || []);
+      await fetchData({
+        endpoint: "/api/getDataBookedFalse",
+        method: "GET",
+        params: {
+          entities_id: dataUserById?.entity_id,
+          checkPermissionUser: roles?.Booking_requests?._id,
+        },
+        onSuccess: (data) => {
+          setBooked(data?.response || []);
+        },
+        onError: (err) => {
+          console.error("Error fetching booked data:", err);
+          setBooked([]);
+        },
+      });
     } catch (error) {
-      console.error("Failed to fetch booked data:", error);
-    }finally{
-      setIsLoading(false)
+      console.error("Error in fetchDataByProjectId:", error);
+      setBooked([]);
     }
-  };
+  }, [fetchData, dataUserById?.entity_id, roles?.Booking_requests?._id]);
+
+  useEffect(() => {
+    fetchDataByProjectId();
+  }, [fetchDataByProjectId , dataUserById?.entity_id, roles?.Booking_requests?._id]);
+
   const fetchMessages = async (id) => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const response = await axios.get(
         `${BackendUrl}/api/getDataMessageById/${id}`,
         { headers: { authorization: token } }
@@ -54,11 +67,10 @@ export default function ApproveBooked() {
       setMessage(response?.data?.response || []);
     } catch (error) {
       console.error("Failed to fetch messages:", error);
-    }setIsLoading(false)
+    }
+    setIsLoading(false);
   };
-  useEffect(() => {
-    fetchDataBooked();
-  }, [refresh, dataUserById?.entity_id]);
+
   const handleOpenChat = async (id) => {
     if (openChat === id) {
       setOpenChat(null); // Close chat if it's already open
@@ -67,6 +79,7 @@ export default function ApproveBooked() {
       await fetchMessages(id); // Fetch messages for the selected item
     }
   };
+
   const handleDeleteItem = async (id) => {
     await DeleteItem(
       id,
@@ -76,6 +89,7 @@ export default function ApproveBooked() {
       "cancelRequest"
     );
   };
+
   return (
     <Box
       sx={{
@@ -89,53 +103,55 @@ export default function ApproveBooked() {
         {dataBooked?.length > 0 ? (
           dataBooked?.map((item) => (
             <React.Fragment key={item?.book_id}>
-              <Paper 
+              <Paper
                 elevation={3}
-                sx={{ 
+                sx={{
                   padding: 3,
                   marginBottom: 2,
                   borderRadius: 2,
                   transition: "all 0.2s ease-in-out",
                   "&:hover": {
                     transform: "translateY(-2px)",
-                    boxShadow: 6
-                  }
+                    boxShadow: 6,
+                  },
                 }}
               >
-                <Typography 
-                  variant="caption" 
-                  sx={{ 
+                <Typography
+                  variant="caption"
+                  sx={{
                     display: "block",
                     marginBottom: 1,
-                    color: "text.secondary"
+                    color: "text.secondary",
                   }}
                 >
                   {getTimeAgo(item?.created_book_at)}
                 </Typography>
 
-                <Typography 
+                <Typography
                   dir="rtl"
-                  sx={{ 
+                  sx={{
                     marginBottom: 2,
-                    fontWeight: 500
+                    fontWeight: 500,
                   }}
                 >
                   {`${item?.user_name} من ${item?.Entities_name} طلب حجز ${item?.quantity} عناصر من مادة ${item?.name_material}`}
                 </Typography>
 
-                <Box sx={{ 
-                  display: "flex", 
-                  justifyContent: "space-between", 
-                  alignItems: "center"
-                }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
                   <Box sx={{ display: "flex", gap: 1 }}>
-                    <IconButton 
+                    <IconButton
                       onClick={() => handleDeleteItem(item?.book_id)}
                       color="error"
                     >
                       <Delete />
                     </IconButton>
-                    <IconButton 
+                    <IconButton
                       onClick={() => handleOpenChat(item?.book_id)}
                       color="primary"
                     >
@@ -158,21 +174,21 @@ export default function ApproveBooked() {
                     <Paper
                       key={msg?.message_id}
                       variant="outlined"
-                      sx={{ 
+                      sx={{
                         padding: 2,
                         marginBottom: 1.5,
                         backgroundColor: "#f5f5f5",
-                        borderRadius: 2
+                        borderRadius: 2,
                       }}
                     >
-                      <Box sx={{ 
-                        display: "flex", 
-                        justifyContent: "space-between", 
-                        alignItems: "center"
-                      }}>
-                        <Typography>
-                          {msg?.message}
-                        </Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Typography>{msg?.message}</Typography>
                         <MoreOption
                           msgId={msg?.id}
                           messageDe={msg?.message}

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setLanguage } from "../../../redux/LanguageState.js";
+import { setLanguage } from "../../redux/LanguageState.js";
 import axios from "axios";
-import { BackendUrl } from "../../../redux/api/axios.js";
+import { BackendUrl } from "../../redux/api/axios.js";
 import LogList from "./LogLis.jsx";
-import { getToken } from "../../../utils/handelCookie.jsx";
-import { getDataUserById } from "../../../redux/userSlice/authActions.js";
+import { getToken } from "../../utils/handelCookie.jsx";
+import { getDataUserById } from "../../redux/userSlice/authActions.js";
 const AllLog = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);

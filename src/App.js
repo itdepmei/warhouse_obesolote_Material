@@ -46,12 +46,10 @@ import Inventory from "warehouse_management/Pages/Inventory/inventory";
 import WarehouseNotification from "./warehouse_management/Pages/Notification/WarehouseNotifction";
 import NotificationObsoletedMaterial from "./obesoloteMaterial/Page/Notification/NotificationObesoloteMaterial";
 import MainHome from "./main/MainHome";
-import { getToken, setPermissions } from "./utils/handelCookie";
-import { getApplicationPermissionById } from "./redux/auth/authAction";
 import DashboardEntity from "./obesoloteMaterial/Page/dashboard/DashboardEntity";
-import AllLog from "./obesoloteMaterial/Page/log/AllLog";
 import LogById from "./obesoloteMaterial/Page/log/LogById";
 import Root2 from "./obesoloteMaterial/Layout/Root2";
+import AllLog from "Pages/log/AllLog";
 const MainInformation = React.lazy(() =>
   import("./Pages/manageMainInformation/MainInformation")
 );
@@ -163,6 +161,10 @@ export default function App() {
                 />
                 <Route
                   path="Obsolete-Material-Approve-Admin/Material-Overview/:id"
+                  element={<MaterialOverview />}
+                />
+                 <Route
+                  path="Obsolete-Material-Approve-Super-Admin/Material-Overview/:id"
                   element={<MaterialOverview />}
                 />
                 <Route

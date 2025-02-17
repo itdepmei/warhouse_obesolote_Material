@@ -6,8 +6,7 @@ import Cookies from "js-cookie";
  */
 export const setToken = (accessToken, refreshToken) => {
   Cookies.set("authToken", accessToken, { expires: 1 }); 
-  Cookies.set("refreshToken", refreshToken, { expires: 365 * 10 }); // Set refresh token to expire in 10 years
-
+  Cookies.set("refreshToken", refreshToken, { expires: 1 }); 
 };
 /**
  * Retrieves the access token from cookies.

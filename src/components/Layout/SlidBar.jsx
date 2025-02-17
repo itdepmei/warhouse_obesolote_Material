@@ -382,7 +382,6 @@ const SideBar = ({ open, handleDrawerClose, Route1, Route2, logo }) => {
                 marginLeft: "10px",
                 marginRight: "10px",
                 borderRadius: "5px",
-                
               }}
             >
               <ListItemIcon
@@ -560,5 +559,4 @@ const SideBar = ({ open, handleDrawerClose, Route1, Route2, logo }) => {
     </Drawer>
   );
 };
-
 export default SideBar;

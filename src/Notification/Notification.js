@@ -16,7 +16,8 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
 import Loader from "../components/Loader";
-export default function Notification({ urlApi }) {
+import { useApi } from "../hooks/useApi";
+export default function Notification({ urlApi,permission , category_id}) {
   const maintheme = useSelector((state) => state?.ThemeData?.maintheme);
   const [refresh, setRefresh] = React.useState(false);
   const [notification, setNotification] = React.useState([]); // Initialize as empty array
@@ -26,7 +27,6 @@ export default function Notification({ urlApi }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
-
   const handlePath = async (data) => {
     try {
       setLoading(true);
@@ -51,35 +51,51 @@ export default function Notification({ urlApi }) {
     dispatch(getDataUserById(token));
   }, [dispatch, token]);
 
-  const fetchDataBooked = async () => {
-    setLoading(true);
+  const { loading: apiLoading, error, fetchData } = useApi();
+
+  const fetchDataByProjectId = React.useCallback(async () => {
     if (!dataUserById?.entity_id) return;
+    
+    setLoading(true);
     try {
-      const response = await axios.get(
-        `${BackendUrl}/api/${urlApi}/${dataUserById.entity_id}`,
-        { headers: { authorization: token } }
-      );
-      // Ensure we're setting an array, use empty array as fallback
-      const notificationData = Array.isArray(response?.data?.response)
-        ? response.data.response
-        : [];
-      setNotification(notificationData);
+      await fetchData({
+        endpoint: `/api/${urlApi}`,
+        method: "GET",
+        params: {
+          entity_id: dataUserById?.entity_id,
+          checkPermissionUser: permission,
+          category_id: category_id
+        },
+        onSuccess: (data) => {
+          // Ensure we're setting an array, use empty array as fallback
+          const notificationData = Array.isArray(data?.response)
+            ? data.response
+            : [];
+          setNotification(notificationData);
+        },
+        onError: (err) => {
+          console.error("Error fetching notification data:", err);
+          setNotification([]); // Reset to empty array on error
+        }
+      });
     } catch (error) {
-      console.error("Failed to fetch booked data:", error);
+      console.error("Error in fetchDataByProjectId:", error);
       setNotification([]); // Reset to empty array on error
     } finally {
       setLoading(false);
     }
-  };
+  }, [
+    fetchData,
+    dataUserById?.entity_id,
+    urlApi,
+    permission
+  ]);
 
   useEffect(() => {
-    fetchDataBooked();
-  }, [refresh, dataUserById?.entity_id]);
-
-  // Ensure we have an array before slicing
-  const displayedNotifications = Array.isArray(notification)
-    ? notification.slice(0, displayCount)
-    : [];
+    if (dataUserById?.entity_id) {
+      fetchDataByProjectId();
+    }
+  }, [fetchDataByProjectId, dataUserById?.entity_id, refresh]);
 
   const handleSeeMore = () => {
     setDisplayCount((prevCount) => prevCount + 4);
@@ -151,6 +167,11 @@ export default function Notification({ urlApi }) {
       console.log(error);
     }
   };
+
+  // Ensure we have an array before slicing
+  const displayedNotifications = Array.isArray(notification)
+    ? notification.slice(0, displayCount)
+    : [];
 
   return (
     <React.Fragment>

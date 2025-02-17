@@ -155,65 +155,31 @@ export const logoutUser = createAsyncThunk(
 
 export const refreshAccessToken = createAsyncThunk(
   "user/refreshAccessToken",
-  async (_, { dispatch, rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     const info = JSON.parse(localStorage.getItem("user"));
     try {
       const refreshToken = getRefreshToken();
       if (!refreshToken) throw new Error("No refresh token available");
-      const response = await axios.post(`${BackendUrl}/api/refreshToken`, {
+      const response = await axios.post(`${BackendUrl}/api/refresh-token`, {
         refreshToken,
       });
       if (response) {
+        console.log("dfsd",response?.data);
         const { accessToken } = response.data;
         setToken(accessToken, refreshToken); // Update tokens
-        window.location.reload();
+        // window.location.reload();
         return { accessToken };
       }
     } catch (error) {
-      window.location.reload();
+      console.log("error", error.response);
+
+      // window.location.reload();
       const user_id = info.user_id;
-      dispatch(logoutUser(user_id));
+      // store.dispatch(logoutUser(user_id));
       return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
-
-// Axios instance with interceptor
-// const axiosInstance = axios.create();
-// axiosInstance.interceptors.response.use(
-//   (response) => response,
-//   async (error) => {
-//     const originalRequest = error.config;
-//     console.log("originalRequest", originalRequest);
-
-//     // If the error is a 401 and the request has not already been retried
-//     if (error.response?.status === 401 && !originalRequest._retry) {
-//       originalRequest._retry = true;
-//       try {
-//         const refreshToken = getRefreshToken();
-//         // Check if the refresh token is expired
-//         if (!refreshToken) {
-//           // Refresh token does not exist, logout immediately
-//           removeToken();
-//           localStorage.clear();
-//           window.location.reload(); // Trigger logout process
-//           return Promise.reject(new Error("Refresh token expired"));
-//         }
-//         // Try to refresh the access token
-//         const newToken = await refreshAccessToken();
-//         originalRequest.headers.authorization = `Bearer ${newToken.accessToken}`;
-//         return axiosInstance(originalRequest);
-//       } catch (err) {
-//         // If refreshing the token fails, remove tokens and log out
-//         removeToken();
-//         localStorage.clear();
-//         window.location.reload(); // Redirect to login if refresh fails
-//         throw err;
-//       }
-//     }
-//     return Promise.reject(error);
-//   }
-// );
 
 export {
   registerUser,

@@ -1,62 +1,69 @@
 import React, { useCallback, useEffect, useState } from "react";
 import ManagementUsers from "./ManagemantUsersList";
-import { BackendUrl } from "../../redux/api/axios";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { getToken } from "../../utils/handelCookie";
-import { getDataUserById } from "../../redux/userSlice/authActions";
+import {
+  getDataUserById,
+} from "../../redux/userSlice/authActions";
 import { useTranslation } from "react-i18next";
+import { useApi } from '../../hooks/useApi'; // Assuming useApi hook is imported from here
+
 function UserManagementAllUsers() {
   const { dataUserById } = useSelector((state) => {
     return state.user;
   });
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [loading, setLoading] = useState(false);
   const [dataUser, setDataUser] = useState([]);
   const [deleteItem, setDelete] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
-  const {t}=useTranslation()
+  const { t } = useTranslation();
   const token = getToken();
   const [refreshButton, setRefreshButton] = useState(false);
   const { roles } = useSelector((state) => state.RolesData);
   const dispatch = useDispatch();
+  const { loading: apiLoading, error, fetchData } = useApi(); // Using the new API hook
   useEffect(() => {
+    console.log('Dispatching getDataUserById');
     dispatch(getDataUserById(token));
-  }, [dispatch]);
+  }, [dispatch, token]);
   const fetchDataByProjectId = useCallback(async () => {
-    setLoading(true);
+    console.log('fetchDataByProjectId called with:', {
+      page,
+      limit,
+      checkPermissionUser: roles?.Add_Data_Users?._id
+    });
     try {
-      const response = await axios.get(
-        `${BackendUrl}/api/getDataUserManage?page=${page}&limit=${limit}&id=${dataUserById.entity_id}&checkPermissionUser=${roles?.Add_Data_Users?._id}`,
-        {
-          headers: {
-            authorization: token,
-          },
+      const response = await fetchData({
+        endpoint: '/api/getDataUserManage',
+        method: 'GET',
+        params: {
+          page,
+          limit,
+          checkPermissionUser: roles?.Add_Data_Users?._id
+        },
+        onSuccess: (data) => {
+          console.log('Data fetched successfully:', data);
+          setDataUser(data?.response);
+          setTotalPages(data?.pagination?.totalPages);
+          setTotalItems(data?.pagination?.totalItems);
+        },
+        onError: (err) => {
+          console.error('Error in fetchDataByProjectId:', err);
         }
-      );
-      if (response.data) {
-        setDataUser(response?.data?.response);
-        setTotalPages(response?.data?.pagination?.totalPages);
-        setTotalItems(response?.data?.pagination?.totalItems);
-      }
+      });
+      return response;
     } catch (error) {
       console.error("Error fetching project data:", error);
-    } finally {
-      setLoading(false);
     }
-  }, [
-    page,
-    limit,
-    dataUserById.entity_id,
-    roles?.Add_Data_Users?._id,
-    token,
-    refreshButton,
-  ]);
+  }, [fetchData, page, limit, roles?.Add_Data_Users?._id]);
+
   useEffect(() => {
+    console.log('Effect triggered with:', { refreshButton, deleteItem, page, limit });
     fetchDataByProjectId();
   }, [fetchDataByProjectId, refreshButton, deleteItem, page, limit]);
+
   return (
     <div>
       <ManagementUsers
@@ -71,7 +78,7 @@ function UserManagementAllUsers() {
         setLimit={setLimit}
         allUser={true}
         pathLink={"Permission"}
-        loading={loading} // Optional to handle loading state
+        loading={apiLoading} // Using the loading state from the API hook
         title={t("userManager.Authorized personnel information management")}
         info={dataUserById}
       />

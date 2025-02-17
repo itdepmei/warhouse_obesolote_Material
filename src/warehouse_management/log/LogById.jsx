@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setLanguage } from "../../../redux/LanguageState.js";
+import { setLanguage } from "../../redux/LanguageState.js";
 import axios from "axios";
-import { BackendUrl } from "../../../redux/api/axios.js";
-import { getDataUserById } from "../../../redux/userSlice/authActions.js";
-import { getToken } from "../../../utils/handelCookie.jsx";
-import LogList from "Pages/log/LogLis.jsx";
+import { BackendUrl } from "../../redux/api/axios.js";
+import { getDataUserById } from "../../redux/userSlice/authActions.js";
+import { getToken } from "../../utils/handelCookie.jsx";
+import LogList from "../../obesoloteMaterial/Page/log/LogLis.jsx";
 const LogById = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
@@ -32,7 +32,7 @@ const LogById = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `${BackendUrl}/api/getLogByEntityId?page=${page}&limit=${limit}&entityId=${dataUserById?.entity_id}&checkPermissionUser=${roles?.show_log_entity?._id}}`,
+          `${BackendUrl}/api/getLogByEntityId?page=${page}&limit=${limit}&entityId=${dataUserById?.entity_id}&checkPermissionUser=${roles?.show_log_entity?._id}}&category_id=2`,
           {
             headers: {
               authorization: token,
@@ -52,6 +52,7 @@ const LogById = () => {
     };
     fetchDataByProjectId();
   }, [dataUserById, deleteItem, refreshButton, page, limit]);
+
   return (
     <>
       <LogList

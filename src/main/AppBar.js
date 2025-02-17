@@ -124,7 +124,7 @@ const AppbarHeader = ({ open, handleDrawerOpen, setMode }) => {
                 transition: "all 0.2s",
               }}
             >
-              {t("login")}
+              {t("تسجيل الدخول")}
             </Button>
           ) : (
             <>
@@ -150,9 +150,7 @@ const AppbarHeader = ({ open, handleDrawerOpen, setMode }) => {
                         : "rgba(0,0,0,0.04)",
                   },
                 }}
-              >
-                
-              </IconButton>
+              ></IconButton>
               <DrobMenueAuth dispatch={dispatch} navigate={navigate} />
               <OtherApplication navigate={navigate} />
             </>

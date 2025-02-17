@@ -31,6 +31,7 @@ import { getToken } from "utils/handelCookie.jsx";
 import { getDataUserById } from "../../../redux/userSlice/authActions.js";
 import { getRoleAndUserId } from "../../../redux/RoleSlice/rolAction.js";
 import HandelExcelFile from "./excelForm/HandelExcell.js";
+import { useApi } from "../../../hooks/useApi.js";
 const FormDeletedList = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
@@ -103,21 +104,13 @@ const FormDeletedList = () => {
           `${BackendUrl}/api/getAllDataUnits`,
           { headers: { authorization: token } }
         );
-        const fetchDataByProjectId = axios.get(
-          `${BackendUrl}/api/${url}?entities_id=${dataUserById?.entity_id}&page=${page}&limit=${limit}&checkPermissionUser=${roles?.view_data_obsolete?._id}`,
-          { headers: { authorization: token } }
-        );
-        const [
-          stagnantMaterialsResponse,
-          mainClassResponse,
-          subClassResponse,
-          unitMeasuringResponse,
-        ] = await Promise.allSettled([
-          fetchDataByProjectId,
-          fetchMainClassData,
-          fetchSubClassData,
-          fetchUnitMeasuringData,
-        ]);
+
+        const [mainClassResponse, subClassResponse, unitMeasuringResponse] =
+          await Promise.allSettled([
+            fetchMainClassData,
+            fetchSubClassData,
+            fetchUnitMeasuringData,
+          ]);
         // Set data or handle failures
         if (mainClassResponse.status === "fulfilled") {
           setDataMainClass(mainClassResponse.value?.data?.response || []);
@@ -145,24 +138,6 @@ const FormDeletedList = () => {
             unitMeasuringResponse.reason
           );
         }
-        if (stagnantMaterialsResponse.status === "fulfilled") {
-          setDataProduct(stagnantMaterialsResponse.value.data?.response || []);
-          setTotalPages(
-            stagnantMaterialsResponse?.value?.data?.pagination?.totalPages || 0
-          );
-          setTotalItems(
-            stagnantMaterialsResponse?.value?.data?.pagination?.totalItems || 0
-          );
-        } else {
-          console.error(
-            "Failed to fetch stagnant materials data:",
-            stagnantMaterialsResponse?.reason
-          );
-          // Handle case where stagnant materials data isn't fetched correctly
-          setDataProduct([]);
-          setTotalPages(0);
-          setTotalItems(0);
-        }
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -180,6 +155,71 @@ const FormDeletedList = () => {
     roles?.view_data_obsolete?._id,
     permissionData,
     roles?.show_all_data_obsolete_material?._id,
+  ]);
+  const { loading: apiLoading, error, fetchData } = useApi();
+  const fetchDataByProjectId = useCallback(async () => {
+    try {
+      const hasDirectPermission = hasPermission(
+        roles?.show_all_data_obsolete_material?._id,
+        permissionData
+      );
+      const url = hasDirectPermission
+        ? "getDataStagnantMaterialsPa"
+        : "getDataStagnantMaterialsByUserId";
+
+      await fetchData({
+        endpoint: `/api/${url}`,
+        method: "GET",
+        params: {
+          page,
+          limit,
+          entities_id: dataUserById?.entity_id,
+          checkPermissionUser: roles?.view_data_obsolete?._id,
+        },
+        onSuccess: (data) => {
+          if (data?.response) {
+            setDataProduct(data.response);
+            setTotalPages(data.pagination?.totalPages || 0);
+            setTotalItems(data.pagination?.totalItems || 0);
+          } else {
+            setDataProduct([]);
+            setTotalPages(0);
+            setTotalItems(0);
+          }
+        },
+        onError: (err) => {
+          console.error("Error fetching data:", err);
+          setDataProduct([]);
+          setTotalPages(0);
+          setTotalItems(0);
+        },
+      });
+    } catch (error) {
+      console.error("Error in fetchDataByProjectId:", error);
+      setDataProduct([]);
+      setTotalPages(0);
+      setTotalItems(0);
+    }
+  }, [
+    fetchData,
+    page,
+    limit,
+    dataUserById?.entity_id,
+    roles?.view_data_obsolete?._id,
+    roles?.show_all_data_obsolete_material?._id,
+    permissionData,
+    hasPermission,
+  ]);
+  useEffect(() => {
+    fetchDataByProjectId();
+  }, [
+    fetchDataByProjectId,
+    page,
+    limit,
+    roles?.view_data_obsolete?._id,
+    roles?.show_all_data_obsolete_material?._id,
+    permissionData,
+    hasPermission,
   ]);
   const columns = [
     { field: "stagnant_id", headerName: "ID", hideable: false, width: 70 },
@@ -323,7 +363,7 @@ const FormDeletedList = () => {
   }, []);
   return (
     <>
-      {loading && <Loader />}
+      {apiLoading && <Loader />}
       <Box
         dir={rtl?.dir}
         sx={{ marginLeft: "20px", marginRight: "20px", minWidth: "999px" }}

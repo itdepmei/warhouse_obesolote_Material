@@ -27,6 +27,7 @@ import {
 } from "../../../utils/Function.jsx";
 import moment from "moment";
 import InformationMaterialBooked from "./InformationMaterialBooked.jsx";
+import { useApi } from "../../../hooks/useApi.js";
 const BookObsoleteMaterial = () => {
   const { dataUserById } = useSelector((state) => state.user);
   const { roles } = useSelector((state) => state.RolesData);
@@ -47,35 +48,57 @@ const BookObsoleteMaterial = () => {
       dispatch(getDataUserById(token));
     }
   }, [dispatch, token, dataUserById]);
+  const { loading: apiLoading, error, fetchData } = useApi();
+
   const fetchDataByProjectId = useCallback(async () => {
     if (!dataUserById?.entity_id) return;
+
     setLoading(true);
     try {
-      const response = await axios?.get(
-        `${BackendUrl}/api/getDataBook?entity_id=${dataUserById?.entity_id}&page=${page}&limit=${limit}&checkPermissionUser=${roles?.management_order_entity?._id}`,
-        {
-          headers: {
-            authorization: token,
-          },
-        }
-      );
-      if (response.data) {
-        setDataBookObsolete(response.data.response);
-        setTotalPages(response.data.pagination.totalPages);
-        setTotalItems(response.data.pagination.totalItems);
-      }
+      await fetchData({
+        endpoint: "/api/getDataBook",
+        method: "GET",
+        params: {
+          entity_id: dataUserById?.entity_id,
+          page,
+          limit,
+          checkPermissionUser: roles?.management_order_entity?._id,
+        },
+        onSuccess: (data) => {
+          if (data) {
+            setDataBookObsolete(data.response);
+            setTotalPages(data.pagination?.totalPages || 0);
+            setTotalItems(data.pagination?.totalItems || 0);
+          }
+        },
+        onError: (err) => {
+          console.error("Error fetching booked data:", err);
+          setDataBookObsolete([]);
+          setTotalPages(0);
+          setTotalItems(0);
+        },
+      });
     } catch (error) {
-      console.error("Error fetching project data:", error);
+      console.error("Error in fetchDataByProjectId:", error);
+      setDataBookObsolete([]);
+      setTotalPages(0);
+      setTotalItems(0);
     } finally {
       setLoading(false);
     }
-  }, [dataUserById, token, page, limit, roles?.management_order_entity?._id]);
+  }, [
+    fetchData,
+    dataUserById?.entity_id,
+    page,
+    limit,
+    roles?.management_order_entity?._id,
+  ]);
 
   useEffect(() => {
     if (dataUserById?.entity_id) {
       fetchDataByProjectId();
     }
-  }, [dataUserById, fetchDataByProjectId, refreshButton, page, limit]);
+  }, [fetchDataByProjectId, dataUserById?.entity_id, refreshButton]);
   const calculateDaysLeftForItems = () => {
     const now = moment();
     const updatedDaysLeftMap = {};

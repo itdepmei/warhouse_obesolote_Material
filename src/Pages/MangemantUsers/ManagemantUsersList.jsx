@@ -25,7 +25,6 @@ import { getToken } from "../../utils/handelCookie.jsx";
 import {
   renderMenuItem,
   DeleteItem,
-  hasPermission,
 } from "../../utils/Function.jsx";
 import { BackendUrl } from "../../redux/api/axios.js";
 import FilterDataUser from "./filterUser.js";

@@ -1,10 +1,10 @@
 import { useSelector } from "react-redux";
-import Header from "../../../components/HeaderComponent.jsx";
+import Header from "../../components/HeaderComponent.jsx";
 import { Box, Typography } from "@mui/material";
-import GridTemplate from "../../../components/GridTemplet.jsx";
-import RefreshButtonData from "../../../components/RefreshButton.jsx";
-import { formatDate } from "../../../utils/Function.jsx";
-import Loader from "../../../components/Loader.jsx";
+import GridTemplate from "../../components/GridTemplet.jsx";
+import RefreshButtonData from "../../components/RefreshButton.jsx";
+import { formatDate } from "../../utils/Function.jsx";
+import Loader from "../../components/Loader.jsx";
 const LogList = ({
   dataLog,
   totalItems,

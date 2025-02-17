@@ -3,18 +3,16 @@ import Reports from "./BannerAndReports/Reports";
 import Banner from "./BannerAndReports/Banner";
 import Footer from "./Footer/Footer";
 import { useTheme } from "@mui/material";
-import { getToken } from "../utils/handelCookie";
 import AppbarHeader from "./AppBar";
 import { BackendUrl } from "../redux/api/axios";
 import Category from "./category/CategoryStagnant";
 import Home from "./Home";
-function MainHome(props) {
+function MainHome({ header = true }) {
   const homeRef = useRef(null);
   const reportsRef = useRef(null);
   const categoryRef = useRef(null);
   const productsRef = useRef(null);
   const footerRef = useRef(null);
-  const token = getToken();
   const theme = useTheme();
   // Function to scroll to a specific section
   const scrollToRef = (ref) => {
@@ -24,7 +22,7 @@ function MainHome(props) {
   };
   return (
     <div>
-      {props?.header && (
+      {header && (
         <div>
           <AppbarHeader />
         </div>

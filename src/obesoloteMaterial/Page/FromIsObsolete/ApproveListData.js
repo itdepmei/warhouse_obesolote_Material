@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Header from "../../../components/HeaderComponent.jsx";
 import { Box, Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -11,13 +11,10 @@ import DropDownGrid from "../../../components/CustomMennu.jsx";
 import {
   DeleteItem,
   formatDateYearsMonth,
+  hasPermission,
   renderMenuItem,
 } from "../../../utils/Function.jsx";
-import {
-  DeleteOutlined,
-  MarkChatRead,
-  OpenInNew,
-} from "@mui/icons-material";
+import { DeleteOutlined, MarkChatRead, OpenInNew } from "@mui/icons-material";
 import Loader from "../../../components/Loader.jsx";
 import "../style.css";
 import Swal from "sweetalert2";
@@ -27,6 +24,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getDataUserById } from "../../../redux/userSlice/authActions.js";
 import { setLanguage } from "../../../redux/LanguageState.js";
+import { useApi } from "../../../hooks/useApi.js";
 const FormApproveToRequest = ({
   urlFetcHData,
   title,
@@ -53,6 +51,7 @@ const FormApproveToRequest = ({
   const [totalItems, setTotalItems] = useState("");
   const [filterDataMainClass, setFilterDataMainClass] = useState([]);
   const [dataMaterials, setDataMaterials] = useState([]);
+  const { loading: apiLoading, error, fetchData } = useApi();
   const { t } = useTranslation();
   const navigate = useNavigate();
   let token = getToken();
@@ -60,7 +59,7 @@ const FormApproveToRequest = ({
   useEffect(() => {
     dispatch(getDataUserById(token));
     dispatch(setLanguage());
-  }, [dispatch,token]);
+  }, [dispatch, token]);
   useEffect(() => {
     if (filterDataMainClass.length > 0) {
       setDataMaterials(filterDataMainClass);
@@ -85,21 +84,12 @@ const FormApproveToRequest = ({
           `${BackendUrl}/api/getAllDataUnits`,
           { headers: { authorization: token } }
         );
-        const fetchDataByProjectId = axios.get(
-          `${BackendUrl}/api/${urlFetcHData}?entities_id=${dataUserById?.entity_id}&page=${page}&limit=${limit}&checkPermissionUser=${approve_to_request}`,
-          { headers: { authorization: token } }
-        );
-        const [
-          stagnantMaterialsResponse,
-          mainClassResponse,
-          subClassResponse,
-          unitMeasuringResponse,
-        ] = await Promise.allSettled([
-          fetchDataByProjectId,
-          fetchMainClassData,
-          fetchSubClassData,
-          fetchUnitMeasuringData,
-        ]);
+        const [mainClassResponse, subClassResponse, unitMeasuringResponse] =
+          await Promise.allSettled([
+            fetchMainClassData,
+            fetchSubClassData,
+            fetchUnitMeasuringData,
+          ]);
         // Set data or handle failures
         if (mainClassResponse.status === "fulfilled") {
           setDataMainClass(mainClassResponse.value?.data?.response || []);
@@ -127,24 +117,6 @@ const FormApproveToRequest = ({
             unitMeasuringResponse.reason
           );
         }
-        if (stagnantMaterialsResponse.status === "fulfilled") {
-          setDataProduct(stagnantMaterialsResponse.value.data?.response || []);
-          setTotalPages(
-            stagnantMaterialsResponse?.value?.data?.pagination?.totalPages || 0
-          );
-          setTotalItems(
-            stagnantMaterialsResponse?.value?.data?.pagination?.totalItems || 0
-          );
-        } else {
-          console.error(
-            "Failed to fetch stagnant materials data:",
-            stagnantMaterialsResponse?.reason
-          );
-          // Handle case where stagnant materials data isn't fetched correctly
-          setDataProduct([]);
-          setTotalPages(0);
-          setTotalItems(0);
-        }
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -163,7 +135,45 @@ const FormApproveToRequest = ({
     approve_to_request,
     urlFetcHData,
   ]);
-
+  const fetchDataByProjectId = useCallback(async () => {
+    try {
+      await fetchData({
+        endpoint: `/api/${urlFetcHData}`,
+        method: "GET",
+        params: {
+          page,
+          limit,
+          entities_id: dataUserById?.entity_id,
+          checkPermissionUser: approve_to_request,
+        },
+        onSuccess: (data) => {
+          if (data?.response) {
+            setDataProduct(data.response);
+            setTotalPages(data.pagination?.totalPages || 0);
+            setTotalItems(data.pagination?.totalItems || 0);
+          } else {
+            setDataProduct([]);
+            setTotalPages(0);
+            setTotalItems(0);
+          }
+        },
+        onError: (err) => {
+          console.error("Error fetching data:", err);
+          setDataProduct([]);
+          setTotalPages(0);
+          setTotalItems(0);
+        },
+      });
+    } catch (error) {
+      console.error("Error in fetchDataByProjectId:", error);
+      setDataProduct([]);
+      setTotalPages(0);
+      setTotalItems(0);
+    }
+  }, [fetchData, page, limit, dataUserById?.entity_id, approve_to_request]);
+  useEffect(() => {
+    fetchDataByProjectId();
+  }, [fetchDataByProjectId, page, limit, approve_to_request]);
   const rows = dataMaterials?.map((item, index) => ({
     index: index + 1,
     ...item,
@@ -211,7 +221,7 @@ const FormApproveToRequest = ({
     },
     {
       field: "Action",
-      headerName:t("Action"),
+      headerName: t("Action"),
       headerAlign: "center",
       flex: 0.8,
       renderCell: (params) => (
@@ -259,9 +269,8 @@ const FormApproveToRequest = ({
       ),
     },
   ];
-
   const openProduct = (id) => {
-    navigate(`ListOfObsoleteItems/Material-Overview/${id}`);
+    navigate(`Material-Overview/${id}`);
   };
   const handleApproveAdminData = (id) => {
     Swal.fire({
@@ -276,7 +285,7 @@ const FormApproveToRequest = ({
         try {
           const response = await axios.post(
             `${BackendUrl}/api/${pathApprove}`,
-            {dataId:id},
+            { dataId: id },
             {
               headers: {
                 authorization: token,
