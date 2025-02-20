@@ -3,25 +3,25 @@ import "./about.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useTranslation } from "react-i18next";
-import imageCompany from "../../../assets/image/DSC02984.JPG";
-import image2 from "../../../assets/image/8.jpg";
-import image3 from "../../../assets/image/1.jpg";
+import imageCompany from "../assets/image/DSC02984.JPG";
+import image2 from "../assets/image/8.jpg";
+import image3 from "../assets/image/1.jpg";
 import Header from "components/HeaderComponent";
 import AppbarHeader from "./AppBar";
-
+import { getToken } from "utils/handelCookie";
 function AboutPage() {
   const [direction, setDirection] = useState("rtl");
   const { t } = useTranslation();
-
   // Initialize AOS and direction setting
   useEffect(() => {
     AOS.init();
     setDirection(localStorage.getItem("language") || "rtl");
   }, []);
-
   return (
     <>
+    {!getToken() &&
       <AppbarHeader />
+    }
       <div id="about" className="about" dir={direction}>
         <div className="container">
           <div className="content-wrapper">
@@ -69,5 +69,4 @@ function AboutPage() {
     </>
   );
 }
-
 export default AboutPage;

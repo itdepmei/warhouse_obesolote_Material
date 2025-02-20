@@ -152,7 +152,7 @@ export default function ReportModel({
       }
       if (reportFormat === "displayData") {
         const response = await axios.get(
-          `${BackendUrl}/api/getDataINforamaitionReportWarehouse`,
+          `${BackendUrl}/api/warehouse/getDataINforamaitionReportWarehouse`,
           {
             params: {
               ...requestData,
@@ -175,7 +175,7 @@ export default function ReportModel({
           toast.error(t("Failed to fetch report data."));
         }
       } else {
-        const endpoint = `${BackendUrl}/api/exportDataWarehouse`;
+        const endpoint = `${BackendUrl}/api/warehouse/exportDataWarehouse`;
         const response = await axios.post(endpoint, requestData, {
           headers: {
             authorization: token,

@@ -1,4 +1,3 @@
-import React from "react";
 import Permission from "./Permission";
 import { useParams } from "react-router";
 

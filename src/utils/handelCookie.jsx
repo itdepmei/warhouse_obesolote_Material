@@ -5,8 +5,16 @@ import Cookies from "js-cookie";
  * @param {string} refreshToken - The refresh token.
  */
 export const setToken = (accessToken, refreshToken) => {
-  Cookies.set("authToken", accessToken, { expires: 1 }); 
-  Cookies.set("refreshToken", refreshToken, { expires: 1 }); 
+  const cookieOptions = {
+    expires: 1,
+    path: '/',
+    sameSite: 'Strict',
+    secure: window.location.protocol === 'https:',
+    domain: window.location.hostname
+  };
+  
+  Cookies.set("authToken", accessToken, cookieOptions);
+  Cookies.set("refreshToken", refreshToken, cookieOptions);
 };
 /**
  * Retrieves the access token from cookies.
@@ -26,17 +34,25 @@ export const getRefreshToken = () => {
  * Removes the access token and refresh token from cookies.
  */
 export const removeToken = () => {
-  Cookies.remove("authToken");
-  Cookies.remove("refreshToken");
+  Cookies.remove("authToken", { path: "/", domain: window.location.hostname });
+  Cookies.remove("refreshToken", { path: "/", domain: window.location.hostname });
+  Cookies.remove("accessToken", { path: "/", domain: window.location.hostname });
+  Cookies.remove("applicationPermissions", { path: "/", domain: window.location.hostname });
 };
-
 /**
  * Sets the application permissions in cookies.
  * @param {object} permissions - The application permissions.
  */
 export const setPermissions = (permissions) => {
   if (permissions) {
-    Cookies.set('applicationPermissions', JSON.stringify(permissions), { expires: 1 });
+    const cookieOptions = {
+      expires: 1,
+      path: '/',
+      sameSite: 'Strict',
+      secure: window.location.protocol === 'https:',
+      domain: window.location.hostname
+    };
+    Cookies.set('applicationPermissions', JSON.stringify(permissions), cookieOptions);
   }
 };
 

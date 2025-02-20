@@ -24,12 +24,15 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    console.log(originalRequest);
+    
     // If the error is a 401 and the request has not already been retried
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         const refreshToken = getRefreshToken();
         if (!refreshToken) {
+          console.log("No refresh token available" , refreshToken);
           removeToken();
           localStorage.clear();
           // window.location.reload();
@@ -37,6 +40,8 @@ axiosInstance.interceptors.response.use(
         }
         // Dispatch refresh token action
         const result = await store.dispatch(refreshAccessToken()).unwrap();
+        console.log("result", result);
+        
         if (result?.accessToken) {
           // Update the failed request's authorization header with new token
           originalRequest.headers.authorization = `Bearer ${result.accessToken}`;
@@ -47,6 +52,8 @@ axiosInstance.interceptors.response.use(
         }
       } catch (err) {
         // If token refresh fails, clear everything and redirect to login
+        console.log("err", err);
+        
         removeToken();
         localStorage.clear();
         await store.dispatch(logoutUser())

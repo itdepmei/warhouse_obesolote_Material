@@ -34,14 +34,14 @@ export default function InventoryModel(props) {
     specification: "",
     origin: "",
     measuring_id: "",
-    production_date: null,
     materialId: "",
   });
   const [formData, setFormData] = useState({
     quantity_incoming_outgoing: "",
-    expiry_date: null,
-    purchase_date: null,
-    document_date: null,
+    expiry_date: dayjs(new Date()),
+    purchase_date: dayjs(new Date()),
+    document_date: dayjs(new Date()),
+    production_date: dayjs(new Date()),
     document_number: "",
     beneficiary: "",
     state_id: "",
@@ -54,6 +54,7 @@ export default function InventoryModel(props) {
       setFormData((prev) => ({ ...prev, document_type: "مستند وارد" }));
     }
   }, [props?.typeOption]);
+  // handle to get data material by code and entity_id and warehouse_id and search
   const handleCodeChange = async (e) => {
     const code = e.target.value;
     setDataMaterial((prev) => ({ ...prev, code }));
@@ -107,7 +108,7 @@ export default function InventoryModel(props) {
       }
     }
   };
-
+// handel to set data material when onchange event 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -115,6 +116,7 @@ export default function InventoryModel(props) {
       [name]: value,
     }));
   };
+  // handel to set data material when add inventory
   useEffect(() => {
     if (props?.addInventory === "addInventory" && props?.storeData) {
       setDataMaterial({
@@ -130,10 +132,9 @@ export default function InventoryModel(props) {
       });
     }
   }, [props?.addInventory, props?.storeData]);
-
+// if editMode and InventoryData is available
   useEffect(() => {
     if (props?.editMode) {
-     
       setDataMaterial({
         code: props?.InventoryData.cod_material,
         name: props?.InventoryData.name_of_material,
@@ -162,10 +163,12 @@ export default function InventoryModel(props) {
       });
     }
   }, [props?.editMode, props?.InventoryData]);
+
+  // handel to change date
   const handleDateChange = (field, value) => {
     setFormData((prev) => ({
       ...prev,
-      [field]: value ? value.format("YYYY-MM-DD") : null,
+      [field]: value,
     }));
   };
   const handleSubmit = async () => {
@@ -429,7 +432,7 @@ export default function InventoryModel(props) {
             customPadding="0px"
             paddingHorizontal={"0px"}
             required={true}
-            value={formData.document_date ? formData.document_date : null}
+            value={formData?.document_date ? formData?.document_date : null}
             CustomFontSize="12px"
             borderPosition="right"
             is_dateTime={false}
@@ -511,7 +514,6 @@ export default function InventoryModel(props) {
             borderColor="inherit"
           />
         </Grid>
-       
       </Grid>
     </Box>
   );

@@ -10,6 +10,7 @@ import { Table } from "react-bootstrap";
 import { useTheme } from "@mui/material";
 import { getFileIcon } from "utils/Function";
 import { useSelector } from "react-redux";
+import AppbarHeader from "main/AppBar";
 function HelpAboutProject() {
   useEffect(() => {
     AOS.init();
@@ -45,6 +46,9 @@ function HelpAboutProject() {
   }, []);
   return (
     <>
+      {!getToken() &&
+      <AppbarHeader />
+    }
       <div id="" className="" dir={direction === "ar" ? "rtl" : ""}>
         <HeaderCenter title={t("layout.User Manual")} typeHeader="h3" />
         <div className="container mt-4">

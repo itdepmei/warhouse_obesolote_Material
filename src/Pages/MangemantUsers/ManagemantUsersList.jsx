@@ -367,7 +367,7 @@ const ManagementUsers = ({
 
   // Add Permission
   const AddPermission = (user_id) => {
-    navigate(`/${pathLink}/${user_id}`);
+    navigate(`${pathLink}/${user_id}`);
   };
 
   // Data rows

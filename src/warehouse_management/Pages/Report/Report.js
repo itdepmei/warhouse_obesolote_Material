@@ -42,10 +42,10 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   height: "100%",
 }));
 const inventoryData = [
-  { name: "إلكترونيات", value: 300 },
+  { name: "مخزن أطارات", value: 300 },
   { name: "أثاث", value: 200 },
-  { name: "مواد غذائية", value: 150 },
-  { name: "ملابس", value: 250 },
+  { name: "ممحزن موا أحتياطية", value: 150 },
+  { name: "مخزن مواد اولية", value: 250 },
 ];
 
 const monthlyData = [
@@ -101,19 +101,19 @@ const WarehouseReport = () => {
         const [labResponse, FactoriesResponse, WareHouseDataId] =
           await Promise.all([
             axios.get(
-              `${BackendUrl}/api/getLabDataByEntity_id?entity_id=${dataUserById?.entity_id}`,
+              `${BackendUrl}/api/warehouse/getLabDataByEntity_id?entity_id=${dataUserById?.entity_id}`,
               {
                 headers: { authorization: token },
               }
             ),
             axios.get(
-              `${BackendUrl}/api/getFactoryAndUserData?entity_id=${dataUserById?.entity_id}`,
+              `${BackendUrl}/api/warehouse/getFactoryAndUserData?entity_id=${dataUserById?.entity_id}`,
               {
                 headers: { authorization: token },
               }
             ),
             axios.get(
-              `${BackendUrl}/api/getWarehouseDataByEntity_id?entity_id=${dataUserById?.entity_id}`,
+              `${BackendUrl}/api/warehouse/getWarehouseDataByEntity_id?entity_id=${dataUserById?.entity_id}`,
               {
                 headers: { authorization: token },
               }

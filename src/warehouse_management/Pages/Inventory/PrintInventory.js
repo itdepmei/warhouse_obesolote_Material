@@ -8,7 +8,6 @@ import {
   TableBody,
   TableContainer,
   TableHead,
-  TableRow,
   Paper,
   Button,
   Box,
@@ -22,7 +21,6 @@ import {
 } from "@mui/material";
 import { LocalPrintshopOutlined } from "@mui/icons-material";
 import { toast } from "react-toastify";
-
 import { getToken } from "../../../utils/handelCookie";
 import { setLanguage } from "../../../redux/LanguageState";
 import { getDataUserById } from "../../../redux/userSlice/authActions";
@@ -304,6 +302,8 @@ const PrintInventory = () => {
             margin: "0",
             maxWidth: "none",
             boxShadow: "none",
+            width: "100%",
+            height: "100%"
           },
         }}
         ref={componentRef}
@@ -364,6 +364,9 @@ const PrintInventory = () => {
               "@media print": {
                 maxHeight: "none",
                 border: "none",
+                overflow: "visible",
+                breakInside: "avoid",
+                pageBreakInside: "avoid"
               },
             }}
           >
@@ -479,25 +482,39 @@ const PrintInventory = () => {
               size: landscape;
               margin: 4mm;
             }
-            .print-table {
+            html, body {
+              height: 100%;
               width: 100%;
-              border-collapse: collapse;
-              font-size: 11px;
+              margin: 0;
+              padding: 0;
+            }
+            .print-table {
+              width: 100% !important;
+              border-collapse: collapse !important;
+              font-size: 8px !important;
+              page-break-inside: avoid !important;
+              break-inside: avoid !important;
             }
             .print-table th,
             .print-table td {
-              border: 1px solid #ddd;
-              padding: 6px;
-              color: #333;
+              border: 1px solid #ddd !important;
+              padding: 4px !important;
+              color: #333 !important;
+              white-space: nowrap !important;
+              overflow: hidden !important;
+              text-overflow: ellipsis !important;
             }
             .header {
               background-color: #f5f5f5 !important;
               font-weight: bold !important;
               color: #333 !important;
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
             }
             body {
-              -webkit-print-color-adjust: exact;
-              print-color-adjust: exact;
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+              background-color: white !important;
             }
             body.printing * {
               color-adjust: exact !important;
@@ -508,6 +525,18 @@ const PrintInventory = () => {
             }
             .MuiTableContainer-root {
               max-height: none !important;
+              overflow: visible !important;
+              break-inside: auto !important;
+              page-break-inside: auto !important;
+            }
+            .MuiTableRow-root {
+              break-inside: avoid !important;
+              page-break-inside: avoid !important;
+            }
+            button, 
+            .MuiFormControl-root,
+            .MuiSelect-select {
+              display: none !important;
             }
           }
         `}

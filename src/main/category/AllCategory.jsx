@@ -2,15 +2,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import axios from "axios";
-import { BackendUrFile, BackendUrl } from "../../../redux/api/axios";
-import Loader from "../../../components/Loader";
+import { BackendUrFile, BackendUrl } from "../../redux/api/axios";
+import Loader from "../../components/Loader";
 import "aos/dist/aos.css";
 import AutocompleteExample from "components/AutoCompletSearch";
-import imageObsolete from "../../../assets/image/obesoleteMatrial.png";
+import imageObsolete from "../../assets/image/obesoleteMatrial.png";
 import HeaderCenter from "components/HeaderCenterComponent";
 import Aos from "aos";
 import { useTranslation } from "react-i18next";
 import "./Category.css"
+import AppbarHeader from "main/AppBar";
+import { getToken } from "utils/handelCookie";
 function AllCategory() {
   const [filterData, setFilteredData] = useState([]);
   const [allDataMainClass, setAllDataMainClass] = useState([]);
@@ -35,6 +37,9 @@ function AllCategory() {
   }, []);
   return (
     <>
+       {!getToken() &&
+      <AppbarHeader />
+    }
       {loading && <Loader />}
       <div className="services mt-0 pb-0 mb-3" id="services">
         <div className="container containerDispla w-50">

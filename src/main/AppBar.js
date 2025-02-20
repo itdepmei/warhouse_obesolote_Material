@@ -108,7 +108,9 @@ const AppbarHeader = ({ open, handleDrawerOpen, setMode }) => {
             {t("appBar.userName", { name: dataUserById?.Entities_name })}
           </Typography>
         </Box>
-        <LisItem rtl={rtl} navigate={navigate} />
+        {
+          !token && <LisItem rtl={rtl} navigate={navigate} />
+        }
         <Stack direction="row" spacing={2} alignItems="center">
           {!token ? (
             <Button

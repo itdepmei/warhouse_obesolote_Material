@@ -11,11 +11,12 @@ import "./style/fremwork.css";
 import Pages from "./obesoloteMaterial/Page/pages";
 import PersonalProfile from "./Auth/Profile/informationUser";
 import AllCategory from "./obesoloteMaterial/Page/category/AllCategory";
+import AllCategory1 from "./main/category/AllCategory";
+
 import { useDispatch, useSelector } from "react-redux";
 import React, { Suspense, useEffect, useState } from "react";
 import { setscreenwidth } from "./redux/windoScreen/settingDataSlice";
 import Aos from "aos";
-import AboutPage from "./obesoloteMaterial/Page/home/AboutPage";
 import HelpAboutProject from "./help/help";
 import Loader from "components/Loader";
 import ReactGA from "react-ga";
@@ -31,7 +32,6 @@ import BookObsoleteMaterial from "./obesoloteMaterial/Page/FromIsObsolete/BookOb
 import InformationMaterial from "./obesoloteMaterial/Page/archive/InformationMaterial";
 import FormObsoleteMaterialApproveAdmin from "./obesoloteMaterial/Page/FromIsObsolete/FormAbsoleteMaterialApproveAdmin";
 import RefreshButtonTemplate from "components/Layout/RefreshButtonTemplate";
-import LoginWh from "Auth/loginWarehouse";
 import HomeWharhouse from "warehouse_management/Pages/Home/Home";
 import RootWarehouse from "warehouse_management/Layout/Root3";
 import StoreData from "warehouse_management/Pages/managemnatStoreData/storeData";
@@ -50,6 +50,8 @@ import DashboardEntity from "./obesoloteMaterial/Page/dashboard/DashboardEntity"
 import LogById from "./obesoloteMaterial/Page/log/LogById";
 import Root2 from "./obesoloteMaterial/Layout/Root2";
 import AllLog from "Pages/log/AllLog";
+import AboutPage from "main/AboutPage";
+import UserManagementAllUsers from "Pages/MangemantUsers/UsermanagemantAllUsers";
 const MainInformation = React.lazy(() =>
   import("./Pages/manageMainInformation/MainInformation")
 );
@@ -68,9 +70,7 @@ const ProductOverview = React.lazy(() =>
   import("./obesoloteMaterial/Page/materialOverview/ProductOverview")
 );
 
-const UserManagementAllUsers = React.lazy(() =>
-  import("./Pages/MangemantUsers/UsermanagemantAllUsers")
-);
+
 const SetPermissionFromEntities = React.lazy(() =>
   import("./Pages/MangemantUsers/setPermissionFromEntitis")
 );
@@ -104,18 +104,11 @@ export default function App() {
           <Route path="/" element={<MainHome />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
           {/* Stagnant Materials System Routes (Application ID: 2) */}
-          <Route
-            element={
-              <ProtectedApplicationRoute
-                applicationId={1}
-                setRefresh={setRefresh}
-              />
-            }
-          >
-            <Route path="stagnant-materials" element={<Root2 />}>
-              <Route index element={<Pages />} />
-              <Route path="stagnant-materials_home" element={<Pages />} />
-              <Route element={<PrivateRoutes />}>
+          <Route element={<PrivateRoutes />}>
+            <Route element={<ProtectedApplicationRoute applicationId={1} />}>
+              <Route path="stagnant-materials" element={<Root2 />}>
+                <Route index element={<Pages />} />
+                <Route path="stagnant-materials_home" element={<Pages />} />
                 <Route
                   path="UserManagementAllUsers"
                   element={<UserManagementAllUsers />}
@@ -130,7 +123,11 @@ export default function App() {
                   element={<Permission />}
                 />
                 <Route
-                  path="/stagnant-materials/MainInformation/SetPermissionToGroup/:id"
+                  path="UserManagementAllUsers/Permission/:id"
+                  element={<Permission />}
+                />
+                <Route
+                  path="MainInformation/SetPermissionToGroup/:id"
                   element={<SetPermissionToGroup />}
                 />
                 <Route path="AllLog" element={<AllLog />} />
@@ -149,6 +146,10 @@ export default function App() {
                   element={<SetPermissionFromEntities />}
                 />
                 <Route
+                  path="UserManagementFromEntities/SetPermissionFromEntities/:id"
+                  element={<SetPermissionFromEntities />}
+                />
+                <Route
                   path="BookObsoleteMaterial"
                   element={<BookObsoleteMaterial />}
                 />
@@ -163,7 +164,7 @@ export default function App() {
                   path="Obsolete-Material-Approve-Admin/Material-Overview/:id"
                   element={<MaterialOverview />}
                 />
-                 <Route
+                <Route
                   path="Obsolete-Material-Approve-Super-Admin/Material-Overview/:id"
                   element={<MaterialOverview />}
                 />
@@ -212,90 +213,88 @@ export default function App() {
                   path="refresh-token"
                   element={<RefreshButtonTemplate />}
                 />
+                <Route path="all-category" element={<AllCategory />} />
+                <Route path="help-platform" element={<HelpAboutProject />} />
               </Route>
-              <Route path="all-category" element={<AllCategory />} />
-              <Route path="help-platform" element={<HelpAboutProject />} />
             </Route>
-          </Route>
-          {/* Warehouse Management System Routes (Application ID: 1) */}
-          <Route
-            element={
-              <ProtectedApplicationRoute
-                applicationId={2}
-                setRefresh={setRefresh}
-              />
-            }
-          >
-            <Route path="LoginWh" element={<LoginWh />} />
-            <Route element={<PrivateRoutes />}>
-              <Route path="warehouse-management" element={<RootWarehouse />}>
-                <Route index element={<HomeWharhouse />} />
-                <Route path="warehouse-home" element={<HomeWharhouse />} />
-                <Route
-                  path="warehouse-store"
-                  element={<WarehouseStorageManagement />}
-                />
-                <Route path="Warehouse-Report" element={<WarehouseReport />} />
-                <Route
-                  path="warehouse-Notification"
-                  element={<WarehouseNotification />}
-                />
-                <Route
-                  path="warehouse-store/Inventory"
-                  element={<Inventory />}
-                />
-                <Route
-                  path="warehouse-store/StoreData"
-                  element={<StoreData />}
-                />
-                <Route path="Shipments" element={<Shipments />} />
-                <Route
-                  path="warehouse-store/StoreData/material-movement"
-                  element={<MaterialMovement />}
-                />
-                <Route
-                  path="material-movement"
-                  element={<MaterialMovement />}
-                />
-                <Route
-                  path="Warehouse-Notification/material-movement"
-                  element={<MaterialMovement />}
-                />
-                <Route
-                  path="warehouse-store/Inventory/material-movement"
-                  element={<MaterialMovement />}
-                />
-                <Route
-                  path="warehouse-store/StoreData/print-Inventory"
-                  element={<PrintInventory />}
-                />
-                <Route
-                  path="warehouse-store/Inventory/print-Inventory"
-                  element={<PrintInventory />}
-                />
-                <Route path="general-Setting" element={<LabTabsWareHouse />} />
-                <Route
-                  path="general-Setting/follow-up-labs"
-                  element={<LabMinitoring />}
-                />
-                <Route path="AllLog" element={<AllLog />} />
-                <Route path="logEntity" element={<LogById />} />
-                <Route path="profile" element={<PersonalProfile />} />
-                <Route
-                  path="UserManagementFromEntities"
-                  element={<UserManagementFromEntities />}
-                />
-                {/* refresh token */}
-                <Route
-                  path="refresh-token"
-                  element={<RefreshButtonTemplate />}
-                />
+            {/* Warehouse Management System Routes (Application ID: 1) */}
+            <Route element={<ProtectedApplicationRoute applicationId={2} />}>
+              <Route element={<PrivateRoutes />}>
+                <Route path="warehouse-management" element={<RootWarehouse />}>
+                  <Route index element={<HomeWharhouse />} />
+                  <Route path="warehouse-home" element={<HomeWharhouse />} />
+                  <Route
+                    path="warehouse-store"
+                    element={<WarehouseStorageManagement />}
+                  />
+                  <Route
+                    path="Warehouse-Report"
+                    element={<WarehouseReport />}
+                  />
+                  <Route
+                    path="warehouse-Notification"
+                    element={<WarehouseNotification />}
+                  />
+                  <Route
+                    path="warehouse-store/Inventory"
+                    element={<Inventory />}
+                  />
+                  <Route
+                    path="warehouse-store/StoreData"
+                    element={<StoreData />}
+                  />
+                  <Route path="Shipments" element={<Shipments />} />
+                  <Route
+                    path="warehouse-store/StoreData/material-movement"
+                    element={<MaterialMovement />}
+                  />
+                  <Route
+                    path="material-movement"
+                    element={<MaterialMovement />}
+                  />
+                  <Route
+                    path="Warehouse-Notification/material-movement"
+                    element={<MaterialMovement />}
+                  />
+                  <Route
+                    path="warehouse-store/Inventory/material-movement"
+                    element={<MaterialMovement />}
+                  />
+                  <Route
+                    path="warehouse-store/StoreData/print-Inventory"
+                    element={<PrintInventory />}
+                  />
+                  <Route
+                    path="warehouse-store/Inventory/print-Inventory"
+                    element={<PrintInventory />}
+                  />
+                  <Route
+                    path="general-Setting"
+                    element={<LabTabsWareHouse />}
+                  />
+                  <Route
+                    path="general-Setting/follow-up-labs"
+                    element={<LabMinitoring />}
+                  />
+                  <Route path="AllLog" element={<AllLog />} />
+                  <Route path="logEntity" element={<LogById />} />
+                  <Route path="profile" element={<PersonalProfile />} />
+                  <Route
+                    path="UserManagementFromEntities"
+                    element={<UserManagementFromEntities />}
+                  />
+                  {/* refresh token */}
+                  <Route
+                    path="refresh-token"
+                    element={<RefreshButtonTemplate />}
+                  />
+                </Route>
               </Route>
             </Route>
           </Route>
           {/*  public routes */}
           <Route path="/help-platform" element={<HelpAboutProject />} />
-          <Route path="/all-category" element={<AllCategory />} />
+          <Route path="/all-category" element={<AllCategory1 />} />
           <Route path="/Product-Obsolete/:id" element={<ProductStagnant />} />
           <Route path="/Product-Overview/:id" element={<ProductOverview />} />
           <Route path="/about-page" element={<AboutPage />} />
